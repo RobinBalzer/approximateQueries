@@ -1,17 +1,37 @@
 import java.util.*;
 
+// class for the Graph, consisting of NodeWeighted and EdgeWeighted.
+// first part:  the graph itself
+// second part: some graph algorithms, currently: - dijkstra shortest path
+
+
 public class GraphWeighted {
     private Set<NodeWeighted> nodes;
 
+    /**
+     * creates the graph object
+     */
 
     GraphWeighted() {
         nodes = new HashSet<>();
     }
 
-    public void addNote(NodeWeighted... n) {
+    /**
+     * adds some weightedNodes to the graph
+     *
+     * @param n weightedNodes to be added
+     */
+    public void addNode(NodeWeighted... n) {
         nodes.addAll(Arrays.asList(n));
     }
 
+    /**
+     * adds an edge to the graph.
+     *
+     * @param source      source node
+     * @param destination destination node
+     * @param weight      weight of the edge
+     */
     public void addEdge(NodeWeighted source, NodeWeighted destination, double weight) {
         nodes.add(source);
         nodes.add(destination);
@@ -20,6 +40,13 @@ public class GraphWeighted {
 
     }
 
+    /**
+     * checks that no duplicate edges are added
+     *
+     * @param a      source node
+     * @param b      destination node
+     * @param weight weight of the node
+     */
     private void addEdgeHelper(NodeWeighted a, NodeWeighted b, double weight) {
         for (EdgeWeighted edge : a.edges) {
             if (edge.source == a && edge.destination == b) {
@@ -31,34 +58,10 @@ public class GraphWeighted {
         a.edges.add(new EdgeWeighted(a, b, weight));
     }
 
-    public void printEdges() {
-        for (NodeWeighted node : nodes) {
-            LinkedList<EdgeWeighted> edges = node.edges;
-
-            if (edges.isEmpty()) {
-                System.out.println("Node " + node.name + " has no edges.");
-                continue;
-            }
-            System.out.print("Node " + node.name + " has edges to: ");
-
-            for (EdgeWeighted edge : edges) {
-                System.out.print(edge.destination + "(" + edge.weight + ") ");
-            }
-            System.out.println();
-        }
-    }
-
-    public boolean hasEdge(NodeWeighted source, NodeWeighted destination) {
-        LinkedList<EdgeWeighted> edges = source.edges;
-        for (EdgeWeighted edge : edges) {
-            if (edge.destination == destination) {
-                return true;
-            }
-
-        }
-        return false;
-    }
-
+    /**
+     * resets the visited() boolean of all nodes.
+     * not used yet; might be helpful later on. (second run etc...)
+     */
     public void resetNodesVisited() {
         for (NodeWeighted node : nodes) {
             node.unvisit();
@@ -71,6 +74,12 @@ public class GraphWeighted {
     // ***********************************
     // ***********************************
 
+    /**
+     * basically just dijkstra. calculates the shortestPath from node (start) to node (end)
+     *
+     * @param start starting node
+     * @param end   ending node.
+     */
     public void DijkstraShortestPath(NodeWeighted start, NodeWeighted end) {
         HashMap<NodeWeighted, NodeWeighted> changedAt = new HashMap<>();
         changedAt.put(start, null);
@@ -152,6 +161,14 @@ public class GraphWeighted {
 
     }
 
+    /**
+     * evaluates the closest node in reach that's not yet been visited.
+     *
+     * @param shortestPathMap map of nodes that are currently available for visiting or that have already been visited.
+     * @return node, that is reachable with the least weight. (and has not yet been visited)
+     * <p>
+     * tl;dr: we know the current step of Dijkstra (shortestPathMap) and get the next node that we should visit, returned (closestReachableNode)
+     */
     private NodeWeighted closestReachableUnvisited(HashMap<NodeWeighted, Double> shortestPathMap) {
         double shortestDistance = Double.POSITIVE_INFINITY;
         NodeWeighted closestReachableNode = null;

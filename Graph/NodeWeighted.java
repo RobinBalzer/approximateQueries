@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+// TODO: why does this have to be weighted? -> make unweighted
 
 public class NodeWeighted {
 

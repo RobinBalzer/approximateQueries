@@ -1,5 +1,10 @@
 public class GraphExecution {
 
+    /**
+     * running example; we create a graph, add some nodes, add some WeightedEdges between these nodes, and then call dijkstra on that.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         GraphWeighted graphWeighted = new GraphWeighted();
         NodeWeighted zero = new NodeWeighted(0, "0");
