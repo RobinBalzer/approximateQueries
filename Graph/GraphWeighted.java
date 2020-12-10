@@ -4,7 +4,7 @@ public class GraphWeighted {
     private Set<NodeWeighted> nodes;
 
 
-    GraphWeighted(){
+    GraphWeighted() {
         nodes = new HashSet<>();
     }
 
@@ -59,15 +59,16 @@ public class GraphWeighted {
         return false;
     }
 
-    public void resetNodesVisited(){
-        for (NodeWeighted node : nodes){
+    public void resetNodesVisited() {
+        for (NodeWeighted node : nodes) {
             node.unvisit();
         }
     }
 
-
     // ***********************************
-    // graph algorithms from here
+    // ***********************************
+    // ***  graph algorithms from here
+    // ***********************************
     // ***********************************
 
     public void DijkstraShortestPath(NodeWeighted start, NodeWeighted end) {
@@ -79,7 +80,7 @@ public class GraphWeighted {
 
         // setting every nodes' shortest path weight to positive infinity to start
         // except the starting node whose shortest path weight is 0
-        for (NodeWeighted node : nodes){
+        for (NodeWeighted node : nodes) {
             if (node == start) {
                 shortestPathMap.put(start, 0.0);
             } else shortestPathMap.put(node, Double.POSITIVE_INFINITY);
@@ -99,7 +100,7 @@ public class GraphWeighted {
             // reachable node the path between start and end doesn't exist
             // which means that these nodes are not connected.
 
-            if (currentNode == null){
+            if (currentNode == null) {
                 System.out.println("There isn't a path between " + start.name + " and " + end.name);
                 return;
             }
@@ -113,7 +114,7 @@ public class GraphWeighted {
                 String path = end.name;
                 while (true) {
                     NodeWeighted parent = changedAt.get(child);
-                    if (parent == null){
+                    if (parent == null) {
                         break;
                     }
 
@@ -134,13 +135,13 @@ public class GraphWeighted {
             // and check whether its shortest path value is better when going through our current node
             // than whether we had before
 
-            for (EdgeWeighted edge : currentNode.edges){
+            for (EdgeWeighted edge : currentNode.edges) {
                 if (edge.destination.isVisited())
                     continue;
 
                 if (shortestPathMap.get(currentNode)
-                    + edge.weight
-                    < shortestPathMap.get(edge.destination)) {
+                        + edge.weight
+                        < shortestPathMap.get(edge.destination)) {
                     shortestPathMap.put(edge.destination, shortestPathMap.get(currentNode) + edge.weight);
                     changedAt.put(edge.destination, currentNode);
                 }
@@ -151,10 +152,10 @@ public class GraphWeighted {
 
     }
 
-    private NodeWeighted closestReachableUnvisited(HashMap<NodeWeighted, Double> shortestPathMap){
+    private NodeWeighted closestReachableUnvisited(HashMap<NodeWeighted, Double> shortestPathMap) {
         double shortestDistance = Double.POSITIVE_INFINITY;
         NodeWeighted closestReachableNode = null;
-        for (NodeWeighted node : nodes){
+        for (NodeWeighted node : nodes) {
             if (node.isVisited())
                 continue;
 

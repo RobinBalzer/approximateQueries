@@ -1,6 +1,6 @@
 public class GraphExecution {
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         GraphWeighted graphWeighted = new GraphWeighted();
         NodeWeighted zero = new NodeWeighted(0, "0");
         NodeWeighted one = new NodeWeighted(1, "1");
