@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Set;
 
 // class for specifying the query in form of a graph. it consists of QueryNodes and QueryEdges.
