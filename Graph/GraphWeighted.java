@@ -34,11 +34,11 @@ public class GraphWeighted {
      * @param destination destination node
      * @param weight      weight of the edge
      */
-    public void addEdge(NodeWeighted source, NodeWeighted destination, double weight) {
+    public void addEdge(NodeWeighted source, NodeWeighted destination, String label, double weight) {
         nodes.add(source);
         nodes.add(destination);
 
-        addEdgeHelper(source, destination, weight);
+        addEdgeHelper(source, destination, label, weight);
 
     }
 
@@ -47,9 +47,10 @@ public class GraphWeighted {
      *
      * @param a      source node
      * @param b      destination node
+     * @param label  label of the edge
      * @param weight weight of the node
      */
-    private void addEdgeHelper(NodeWeighted a, NodeWeighted b, double weight) {
+    private void addEdgeHelper(NodeWeighted a, NodeWeighted b, String label, double weight) {
         for (EdgeWeighted edge : a.edges) {
             if (edge.source == a && edge.destination == b) {
                 edge.weight = weight;
@@ -57,7 +58,7 @@ public class GraphWeighted {
             }
         }
 
-        a.edges.add(new EdgeWeighted(a, b, weight));
+        a.edges.add(new EdgeWeighted(a, b, label, weight));
     }
 
     /**
@@ -170,6 +171,8 @@ public class GraphWeighted {
      * @return node, that is reachable with the least weight. (and has not yet been visited)
      * <p>
      * tl;dr: we know the current step of Dijkstra (shortestPathMap) and get the next node that we should visit, returned (closestReachableNode)
+     * complexity: O(nodes). TODO: with PriorityQueue: O(1) + O(log(nodes))
+     * closestNode + resorting the PriorityQueue
      */
     private NodeWeighted closestReachableUnvisited(HashMap<NodeWeighted, Double> shortestPathMap) {
         double shortestDistance = Double.POSITIVE_INFINITY;
