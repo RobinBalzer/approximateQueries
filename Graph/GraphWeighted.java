@@ -1,4 +1,6 @@
 import java.util.*;
+// TODO: dynamic programming?
+// TODO: other functions?
 
 // class for the Graph, consisting of NodeWeighted and EdgeWeighted.
 // first part:  the graph itself
