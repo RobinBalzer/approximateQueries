@@ -42,9 +42,9 @@ public class Example_2020 implements InternalDataBuilder {
         transducerGraph.addTransducerObjectEdge(t0, t0, "u1", "u1", 0);
         transducerGraph.addTransducerObjectEdge(t0, t1, "u1", "v2", 3);
         transducerGraph.addTransducerObjectEdge(t0, t2, "v1", "v2", 1);
-        transducerGraph.addTransducerObjectEdge(t1, t3, "", "v1", 3);
+        transducerGraph.addTransducerObjectEdge(t1, t3, "", "v1", 2);
         transducerGraph.addTransducerObjectEdge(t1, t3, "u2", "", 1);
-        transducerGraph.addTransducerObjectEdge(t2, t2, "u1", "u1", 0);
+        transducerGraph.addTransducerObjectEdge(t2, t3, "u1", "u1", 0);
 
         return transducerGraph;
     }

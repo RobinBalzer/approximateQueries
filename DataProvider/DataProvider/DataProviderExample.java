@@ -11,10 +11,10 @@ public class DataProviderExample {
         QueryGraph queryGraph = new QueryGraph();
         TransducerGraph transducerGraph = new TransducerGraph();
         DatabaseGraph databaseGraph = new DatabaseGraph();
-        String choice = "eXaMPlE_2006";
+        String choice = "eXaMPlE_2020";
 
         DataProvider dataProvider = new DataProvider();
-        dataProvider.provideData("example_2006");
+        dataProvider.provideData(choice);
 
         queryGraph = dataProvider.queryGraph;
         transducerGraph = dataProvider.transducerGraph;
