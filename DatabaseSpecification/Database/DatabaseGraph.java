@@ -1,15 +1,17 @@
+package Database;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 // class for specifying the database in for of a graph. It consists of DatabaseNodes and DatabaseEdges.
-// at the moment we only focus on directed databases. (see comment in DatabaseNode.java)
+// at the moment we only focus on directed databases. (see comment in Database.DatabaseNode.java)
 // so far we can add nodes and edges to the database and print it.
 public class DatabaseGraph {
 
     private Set<DatabaseNode> nodes;
 
-    DatabaseGraph() {
+    public DatabaseGraph() {
         nodes = new HashSet<>();
     }
 

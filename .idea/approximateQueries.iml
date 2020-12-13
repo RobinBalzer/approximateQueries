@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/QuerySpecification" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/TransducerSpecification" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/QueryAnsweringAlgorithms" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/DataProvider" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,3 +1,5 @@
+package Database;
+
 import java.util.LinkedList;
 
 // class for specifying a database node.
@@ -7,7 +9,7 @@ public class DatabaseNode {
     String identifier;
     LinkedList<DatabaseEdge> edges;
 
-    DatabaseNode(String id) {
+    public DatabaseNode(String id) {
         identifier = id;
         edges = new LinkedList<>();
     }

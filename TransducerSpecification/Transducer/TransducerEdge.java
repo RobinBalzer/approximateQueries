@@ -1,3 +1,5 @@
+package Transducer;
+
 // class specifying a transducer edge.
 // this edge is more special than the standard query edge.
 // we need a 5-tuple, with source and target nodes, incoming and outgoing strings and a cost (doing this replacement operation)

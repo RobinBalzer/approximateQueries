@@ -1,3 +1,5 @@
+package Database;
+
 // class specifying a database edge.
 // this edge is now labeled (might be changed later or depending on the database -> use a bool directedGraph (?))
 // this edge is a 3-tuple with source and target node and the label of the edge.

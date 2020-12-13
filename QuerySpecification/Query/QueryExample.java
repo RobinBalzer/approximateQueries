@@ -1,3 +1,5 @@
+package Query;
+
 public class QueryExample {
 
     public static void main(String[] args) {

@@ -1,15 +1,17 @@
+package Query;
+
 import java.util.LinkedList;
 
-// class for specifying a transducer node.
-// similar to the QueryNode we have an identifier and booleans for initial or final states.
-public class TransducerNode {
+// class for specifying a query node.
+// the node has an identifier and is possibly an initialState or a finalState.
+public class QueryNode {
 
     String identifier;
     Boolean initialState;
     Boolean finalState;
-    LinkedList<TransducerEdge> edges;
+    LinkedList<QueryEdge> edges;
 
-    TransducerNode(String id, Boolean initialState, Boolean finalState) {
+    public QueryNode(String id, Boolean initialState, Boolean finalState) {
         identifier = id;
         this.initialState = initialState;
         this.finalState = finalState;

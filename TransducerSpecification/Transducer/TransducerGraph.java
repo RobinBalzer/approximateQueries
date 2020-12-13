@@ -1,3 +1,5 @@
+package Transducer;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,7 +10,7 @@ public class TransducerGraph {
 
     private Set<TransducerNode> nodes;
 
-    TransducerGraph() {
+    public TransducerGraph() {
         nodes = new HashSet<>();
     }
 

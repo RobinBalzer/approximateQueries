@@ -1,5 +1,7 @@
+package Query;
+
 // class for specifying a query edge.
-// A node is labeled and has a source (QueryNode object) and destination (QueryNode object)
+// A node is labeled and has a source (Query.QueryNode object) and destination (Query.QueryNode object)
 // all labels are stored in lowercase to prevent casing-errors!
 // using uppercase labels doesn't throw an error but it'll still get stored in lowercase.
 public class QueryEdge {
