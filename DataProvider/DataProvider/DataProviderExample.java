@@ -4,6 +4,8 @@ import Database.DatabaseGraph;
 import Query.QueryGraph;
 import Transducer.TransducerGraph;
 
+// class for mainly debugging purpose. We test whether we overwrite the objects correctly.
+// we can check our data here aswell since we print out every graph.
 public class DataProviderExample {
 
 

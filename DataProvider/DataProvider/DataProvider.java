@@ -17,6 +17,10 @@ public class DataProvider {
     public DataProvider(){
     }
 
+    /**
+     *
+     * @param choice the data source we want to get the data from.
+     */
     public void provideData(String choice) {
         choice = choice.toLowerCase();
         switch (choice) {
