@@ -12,7 +12,7 @@ public class DatabaseEdge {
     DatabaseEdge(DatabaseNode source, DatabaseNode target, String label) {
         this.source = source;
         this.target = target;
-        this.label = label;
+        this.label = label.toLowerCase();
     }
 
     public String toString() {
