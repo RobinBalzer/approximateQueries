@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 
 // class for specifying a query node.
-// the node has a name and is possibly an initialState or a finalState.
+// the node has an identifier and is possibly an initialState or a finalState.
 public class QueryNode {
 
     String identifier;

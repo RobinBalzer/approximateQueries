@@ -3,7 +3,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 // class for specifying the query in form of a graph. it consists of QueryNodes and QueryEdges.
-// so far we can add nodes or edges to it.
+// so far we can add nodes or edges to it and print it.
 public class QueryGraph {
     private Set<QueryNode> nodes;
 
@@ -32,6 +32,7 @@ public class QueryGraph {
         source.edges.add(new QueryEdge(source, target, label));
     }
 
+    // TODO: add isolated nodes! (same as in the transducer)
     public void printGraph() {
         for (QueryNode node : nodes) {
             for (QueryEdge edge : node.edges) {
