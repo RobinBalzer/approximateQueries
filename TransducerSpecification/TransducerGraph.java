@@ -34,7 +34,8 @@ public class TransducerGraph {
         source.edges.add(new TransducerEdge(source, target, incoming, outgoing, cost));
 
     }
-        // TODO: print isolated nodes. (same as in the query)
+
+    // TODO: print isolated nodes. (same as in the query)
     public void printGraph() {
         for (TransducerNode node : nodes) {
             for (TransducerEdge edge : node.edges) {

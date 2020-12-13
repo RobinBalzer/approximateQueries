@@ -1,5 +1,3 @@
-import java.util.Locale;
-
 // class specifying a transducer edge.
 // this edge is more special than the standard query edge.
 // we need a 5-tuple, with source and target nodes, incoming and outgoing strings and a cost (doing this replacement operation)
@@ -19,7 +17,7 @@ public class TransducerEdge {
         this.cost = cost;
     }
 
-    public String toString(){
+    public String toString() {
         return String.format("(%s) -[%s|%s|%d]-> (%s)", source.identifier, incomingString, outgoingString, cost, target.identifier);
     }
 
