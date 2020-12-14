@@ -2,7 +2,13 @@ package ClassicalAnswers;
 
 public class ProductAutomatonExample {
 
-    public static void main(String[] args){
+    /**
+     * main function mainly for testing the productAutomatonConstruction.
+     * does not add functionality.
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
         String choice = "example_2020";
         ProductAutomatonConstructor productAutomatonConstructor = new ProductAutomatonConstructor(choice);
 

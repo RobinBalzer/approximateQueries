@@ -19,6 +19,13 @@ public class ProductAutomatonConstructor {
 
     ProductAutomatonGraph productAutomatonGraph;
 
+    /**
+     * constructor. We call it with a String for our choice of data.
+     * Then the constructor overwrites the queryGraph and database objects with the according data
+     * that is received from the dataProvider.
+     *
+     * @param choice
+     */
     ProductAutomatonConstructor(String choice) {
         this.choice = choice;
         dataProvider = new DataProvider(choice);
@@ -30,6 +37,25 @@ public class ProductAutomatonConstructor {
 
     }
 
+    /**
+     * construction of the productAutomaton.
+     * <p>
+     * basically for
+     * p, p' states in the queryAutomaton and
+     * r, r' states in the databaseAutomaton
+     * label an arbitrary String
+     * <p>
+     * we add an edge
+     * (p, r) -[label]-> (p', r')
+     * if (p) -[label]-> (p') is an edge in the queryGraph AND
+     * if (r) -[label]-> (r') is an edge in the databaseGraph
+     * <p>
+     * the idea is taken from the productAutomatonConstruction of the paper
+     * regular path queries under approximate semantics
+     * by Grahne and Thomo (year: 2006)
+     * <p>
+     * without considering the transducer yet. This will be done later on in the package @see Approximations
+     */
     public void construct() {
 
         // go over every QueryEdge

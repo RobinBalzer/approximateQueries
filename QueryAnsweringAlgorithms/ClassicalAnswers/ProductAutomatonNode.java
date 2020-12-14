@@ -12,13 +12,18 @@ public class ProductAutomatonNode {
     Boolean initialState;
     Boolean finalState;
     public LinkedList<ProductAutomatonEdge> edges;
-    QueryNode queryNode = new QueryNode();
-    DatabaseNode databaseNode = new DatabaseNode();
 
+    /**
+     * constructor for a productAutomatonNode. it has the form
+     * (queryNode, databaseNode) and has booleans for being an initial or final state.
+     *
+     * @param queryNode    the corresponding queryNode
+     * @param databaseNode the corresponding databaseNode
+     * @param initialState is this an initial state
+     * @param finalState   is this a final state?
+     */
     public ProductAutomatonNode(QueryNode queryNode, DatabaseNode databaseNode, Boolean initialState, Boolean finalState) {
         identifier = Pair.with(queryNode, databaseNode);
-       // this.identifier.setAt0(queryNode.identifier.toLowerCase());
-       //  this.identifier.setAt1(databaseNode.identifier);
 
         this.initialState = initialState;
         this.finalState = finalState;
