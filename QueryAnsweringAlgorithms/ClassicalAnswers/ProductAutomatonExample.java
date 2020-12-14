@@ -6,13 +6,16 @@ public class ProductAutomatonExample {
 
     /**
      * main function mainly for testing the productAutomatonConstruction.
-     * does not add functionality.
+     * does not add functionality despite fancy printing (yay!)
      *
      * @param args
      */
     public static void main(String[] args) {
-        String choice = "example_2020";
+        String choice = "example_2006";
         ProductAutomatonConstructor productAutomatonConstructor = new ProductAutomatonConstructor(choice);
+
+        System.out.println("------------------------");
+        System.out.println("Edges of the product automaton: ");
 
         // construct a productAutomaton and print it
         productAutomatonConstructor.construct();
@@ -21,11 +24,15 @@ public class ProductAutomatonExample {
         productAutomatonConstructor.productAutomatonGraph.updateInitialNodes();
         productAutomatonConstructor.productAutomatonGraph.updateFinalNodes();
 
+        System.out.println("------------------------");
+        System.out.println("Initial states: ");
         Iterator<ProductAutomatonNode> nodeInitial = productAutomatonConstructor.productAutomatonGraph.initialNodes.iterator();
         while (nodeInitial.hasNext()){
             System.out.println(printNode("initial", nodeInitial.next()));
         }
 
+        System.out.println("------------------------");
+        System.out.println("Final states: ");
         Iterator<ProductAutomatonNode> nodeFinal = productAutomatonConstructor.productAutomatonGraph.finalNodes.iterator();
         while(nodeFinal.hasNext()){
             System.out.println(printNode("final", nodeFinal.next()));
