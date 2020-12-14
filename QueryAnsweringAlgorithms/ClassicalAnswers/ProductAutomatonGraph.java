@@ -6,6 +6,8 @@ import java.util.Set;
 
 public class ProductAutomatonGraph {
     public Set<ProductAutomatonNode> nodes;
+    public Set<ProductAutomatonNode> initialNodes = new HashSet<>();
+    public Set<ProductAutomatonNode> finalNodes = new HashSet<>();
 
     /**
      * constructor
@@ -16,14 +18,29 @@ public class ProductAutomatonGraph {
     }
 
     /**
-     * adding some nodes to the productAutomaton
-     * TODO: check not to add duplicates!
-     * This method is not really been used so far (and thus not tested)
+     * adding one node at a time to the set of nodes.
+     * does check for duplicates and doesn't add them
+     * also updates the set of initial and final states upon adding a new node.
      *
-     * @param n some productAutomatonNodes
+     * @param productAutomatonNode one productAutomatonNode
      */
-    public void addProductAutomatonNode(ProductAutomatonNode... n) {
+    public void addProductAutomatonNode(ProductAutomatonNode productAutomatonNode) {
         nodes.addAll(Collections.emptyList());
+
+        for (ProductAutomatonNode node : nodes) {
+            if (node.identifier.getValue0().identifier.equalsIgnoreCase(productAutomatonNode.identifier.getValue0().identifier) &&
+                    node.identifier.getValue1().identifier.equalsIgnoreCase(productAutomatonNode.identifier.getValue1().identifier)) {
+                return;
+            }
+        }
+        nodes.add(productAutomatonNode);
+        if (productAutomatonNode.initialState) {
+            initialNodes.add(productAutomatonNode);
+        }
+
+        if (productAutomatonNode.finalState) {
+            finalNodes.add(productAutomatonNode);
+        }
     }
 
     /**
@@ -36,8 +53,8 @@ public class ProductAutomatonGraph {
      * @param label  the label of the edge (String)
      */
     public void addProductAutomatonEdge(ProductAutomatonNode source, ProductAutomatonNode target, String label) {
-        nodes.add(source);
-        nodes.add(target);
+        addProductAutomatonNode(source);
+        addProductAutomatonNode(target);
 
         // if this edge is already present -> don't add it.
 
@@ -61,4 +78,19 @@ public class ProductAutomatonGraph {
         }
     }
 
+    public void updateInitialNodes() {
+        for (ProductAutomatonNode node : nodes) {
+            if (node.initialState) {
+                initialNodes.add(node);
+            }
+        }
+    }
+
+    public void updateFinalNodes() {
+        for (ProductAutomatonNode node : nodes) {
+            if (node.finalState) {
+                finalNodes.add(node);
+            }
+        }
+    }
 }

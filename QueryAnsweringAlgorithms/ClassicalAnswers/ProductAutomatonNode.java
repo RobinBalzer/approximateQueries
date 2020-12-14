@@ -5,6 +5,7 @@ import Query.QueryNode;
 import org.javatuples.Pair;
 
 import java.util.LinkedList;
+import java.util.Set;
 
 public class ProductAutomatonNode {
 
