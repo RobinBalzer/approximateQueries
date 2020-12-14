@@ -5,9 +5,9 @@ package Database;
 // this edge is a 3-tuple with source and target node and the label of the edge.
 public class DatabaseEdge {
 
-    DatabaseNode source;
-    DatabaseNode target;
-    String label;
+    public DatabaseNode source;
+    public DatabaseNode target;
+    public String label;
 
     DatabaseEdge(DatabaseNode source, DatabaseNode target, String label) {
         this.source = source;

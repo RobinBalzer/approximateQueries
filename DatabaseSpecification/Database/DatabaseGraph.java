@@ -9,7 +9,7 @@ import java.util.Set;
 // so far we can add nodes and edges to the database and print it.
 public class DatabaseGraph {
 
-    private Set<DatabaseNode> nodes;
+    public Set<DatabaseNode> nodes;
 
     public DatabaseGraph() {
         nodes = new HashSet<>();

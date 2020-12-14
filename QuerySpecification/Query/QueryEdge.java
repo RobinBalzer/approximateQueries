@@ -6,9 +6,9 @@ package Query;
 // using uppercase labels doesn't throw an error but it'll still get stored in lowercase.
 public class QueryEdge {
 
-    QueryNode source;
-    QueryNode target;
-    String label;
+    public QueryNode source;
+    public QueryNode target;
+    public String label;
 
     QueryEdge(QueryNode source, QueryNode target, String label) {
         this.source = source;

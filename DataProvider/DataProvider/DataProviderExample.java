@@ -15,8 +15,7 @@ public class DataProviderExample {
         DatabaseGraph databaseGraph = new DatabaseGraph();
         String choice = "eXaMPlE_2020";
 
-        DataProvider dataProvider = new DataProvider();
-        dataProvider.provideData(choice);
+        DataProvider dataProvider = new DataProvider(choice);
 
         queryGraph = dataProvider.queryGraph;
         transducerGraph = dataProvider.transducerGraph;

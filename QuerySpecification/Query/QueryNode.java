@@ -6,10 +6,14 @@ import java.util.LinkedList;
 // the node has an identifier and is possibly an initialState or a finalState.
 public class QueryNode {
 
-    String identifier;
-    Boolean initialState;
+    public String identifier;
+    public Boolean initialState;
     Boolean finalState;
-    LinkedList<QueryEdge> edges;
+    public LinkedList<QueryEdge> edges;
+
+    public QueryNode(){
+
+    }
 
     public QueryNode(String id, Boolean initialState, Boolean finalState) {
         identifier = id;
@@ -18,11 +22,11 @@ public class QueryNode {
         edges = new LinkedList<>();
     }
 
-    boolean isInitialState() {
+    public boolean isInitialState() {
         return initialState;
     }
 
-    boolean isFinalState() {
+    public boolean isFinalState() {
         return finalState;
     }
 

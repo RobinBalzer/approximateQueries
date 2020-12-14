@@ -8,20 +8,17 @@ import Transducer.TransducerGraph;
 // initially we provide 2 examples. see the respective classes for their sources.
 public class DataProvider {
 
-    QueryGraph queryGraph = new QueryGraph();
-    TransducerGraph transducerGraph = new TransducerGraph();
-    DatabaseGraph databaseGraph = new DatabaseGraph();
+    public QueryGraph queryGraph = new QueryGraph();
+    public TransducerGraph transducerGraph = new TransducerGraph();
+    public DatabaseGraph databaseGraph = new DatabaseGraph();
     InternalDataBuilder internalDataBuilderExample_2006 = new Example_2006();
     InternalDataBuilder internalDataBuilderExample_2020 = new Example_2020();
 
-    public DataProvider(){
-    }
-
     /**
-     *
      * @param choice the data source we want to get the data from.
      */
-    public void provideData(String choice) {
+    public DataProvider(String choice) {
+
         choice = choice.toLowerCase();
         switch (choice) {
             case "example_2006":
@@ -41,7 +38,17 @@ public class DataProvider {
         }
     }
 
-    ;
+    public QueryGraph getQueryGraph(){
+        return queryGraph;
+    }
+
+    public TransducerGraph getTransducerGraph(){
+        return transducerGraph;
+    }
+
+    public DatabaseGraph getDatabaseGraph(){
+        return databaseGraph;
+    }
 
 }
 
