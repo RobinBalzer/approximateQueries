@@ -13,7 +13,7 @@ public class DataProviderExample {
         QueryGraph queryGraph = new QueryGraph();
         TransducerGraph transducerGraph = new TransducerGraph();
         DatabaseGraph databaseGraph = new DatabaseGraph();
-        String choice = "eXaMPlE_2020";
+        String choice = "eXaMPlE_2006";
 
         DataProvider dataProvider = new DataProvider(choice);
 

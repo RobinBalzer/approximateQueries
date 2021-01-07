@@ -14,6 +14,8 @@ import Transducer.TransducerNode;
 
 public class Example_2006 implements InternalDataBuilder {
 
+
+    // Q = {SR | T}
     @Override
     public QueryGraph fillQueryGraph() {
         QueryGraph queryGraph = new QueryGraph();
@@ -56,10 +58,10 @@ public class Example_2006 implements InternalDataBuilder {
         DatabaseNode d = new DatabaseNode("d");
 
         databaseGraph.addDatabaseObjectEdge(a, b, "R");
-        databaseGraph.addDatabaseObjectEdge(b, d, "S");
-        databaseGraph.addDatabaseObjectEdge(d, c, "R");
-        databaseGraph.addDatabaseObjectEdge(d, a, "T");
-        databaseGraph.addDatabaseObjectEdge(c, a, "S");
+        databaseGraph.addDatabaseObjectEdge(b, c, "S");
+        databaseGraph.addDatabaseObjectEdge(c, d, "R");
+        databaseGraph.addDatabaseObjectEdge(d, a, "S");
+        databaseGraph.addDatabaseObjectEdge(c, a, "T");
 
         return databaseGraph;
     }

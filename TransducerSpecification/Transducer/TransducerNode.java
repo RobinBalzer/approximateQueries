@@ -6,10 +6,10 @@ import java.util.LinkedList;
 // similar to the Query.QueryNode we have an identifier and booleans for initial or final states.
 public class TransducerNode {
 
-    String identifier;
+    public String identifier;
     Boolean initialState;
     Boolean finalState;
-    LinkedList<TransducerEdge> edges;
+    public LinkedList<TransducerEdge> edges;
 
     public TransducerNode(String id, Boolean initialState, Boolean finalState) {
         identifier = id;
@@ -18,11 +18,11 @@ public class TransducerNode {
         edges = new LinkedList<>();
     }
 
-    boolean isInitialState() {
+    public boolean isInitialState() {
         return initialState;
     }
 
-    boolean isFinalState() {
+    public boolean isFinalState() {
         return finalState;
     }
 

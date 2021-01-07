@@ -24,7 +24,7 @@ public class ProductAutomatonConstructor {
      * Then the constructor overwrites the queryGraph and database objects with the according data
      * that is received from the dataProvider.
      *
-     * @param choice
+     * @param choice the data choice
      */
     ProductAutomatonConstructor(String choice) {
         this.choice = choice;
@@ -36,6 +36,7 @@ public class ProductAutomatonConstructor {
         productAutomatonGraph = new ProductAutomatonGraph();
 
     }
+    // TODO: isolated nodes/subgraphs
 
     /**
      * construction of the productAutomaton.

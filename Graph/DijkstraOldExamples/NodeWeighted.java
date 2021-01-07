@@ -1,3 +1,5 @@
+package DijkstraOldExamples;
+
 import java.util.LinkedList;
 // TODO: why does this have to be weighted? -> make unweighted
 

@@ -25,7 +25,8 @@ public class ProductAutomatonGraph {
      * @param productAutomatonNode one productAutomatonNode
      */
     public void addProductAutomatonNode(ProductAutomatonNode productAutomatonNode) {
-        nodes.addAll(Collections.emptyList());
+        // TODO: is this line useless??
+        // nodes.addAll(Collections.emptyList());
 
         for (ProductAutomatonNode node : nodes) {
             if (node.identifier.getValue0().identifier.equalsIgnoreCase(productAutomatonNode.identifier.getValue0().identifier) &&
@@ -67,6 +68,7 @@ public class ProductAutomatonGraph {
     }
 
     /**
+     * TODO: refactor print methods into proper .txt file output.
      * prints the graph by going thru every node and printing every edge of the node.
      */
     public void printGraph() {
@@ -78,6 +80,7 @@ public class ProductAutomatonGraph {
         }
     }
 
+    // TODO: this method should be useless since we already check that in the addProductAutomatonNode function.
     public void updateInitialNodes() {
         for (ProductAutomatonNode node : nodes) {
             if (node.initialState) {
@@ -86,6 +89,7 @@ public class ProductAutomatonGraph {
         }
     }
 
+    // TODO: this method should be useless since we already check that in the addProductAutomatonNode function.
     public void updateFinalNodes() {
         for (ProductAutomatonNode node : nodes) {
             if (node.finalState) {

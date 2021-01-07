@@ -1,3 +1,4 @@
+package DijkstraOldExamples;
 public class EdgeWeighted implements Comparable<EdgeWeighted> {
 
     NodeWeighted source;

@@ -1,7 +1,5 @@
 package ClassicalAnswers;
 
-import java.util.Iterator;
-
 public class ProductAutomatonExample {
 
     /**
@@ -11,8 +9,19 @@ public class ProductAutomatonExample {
      * @param args
      */
     public static void main(String[] args) {
+
         String choice = "example_2006";
         ProductAutomatonConstructor productAutomatonConstructor = new ProductAutomatonConstructor(choice);
+        CalculatingClassicalAnswers calculatingClassicalAnswers = new CalculatingClassicalAnswers(choice);
+        AnswerSet answerSet = new AnswerSet(choice);
+
+        // productAutomatonConstructor.construct();
+
+        // answerSet.calculate();
+
+        // here we're currently
+        // calculatingClassicalAnswers.reachabilityAll();
+
 
         System.out.println("------------------------");
         System.out.println("Edges of the product automaton: ");
@@ -26,16 +35,14 @@ public class ProductAutomatonExample {
 
         System.out.println("------------------------");
         System.out.println("Initial states: ");
-        Iterator<ProductAutomatonNode> nodeInitial = productAutomatonConstructor.productAutomatonGraph.initialNodes.iterator();
-        while (nodeInitial.hasNext()){
-            System.out.println(printNode("initial", nodeInitial.next()));
+        for (ProductAutomatonNode productAutomatonNode : productAutomatonConstructor.productAutomatonGraph.initialNodes) {
+            System.out.println(printNode("initial", productAutomatonNode));
         }
 
         System.out.println("------------------------");
         System.out.println("Final states: ");
-        Iterator<ProductAutomatonNode> nodeFinal = productAutomatonConstructor.productAutomatonGraph.finalNodes.iterator();
-        while(nodeFinal.hasNext()){
-            System.out.println(printNode("final", nodeFinal.next()));
+        for (ProductAutomatonNode productAutomatonNode : productAutomatonConstructor.productAutomatonGraph.finalNodes) {
+            System.out.println(printNode("final", productAutomatonNode));
         }
     }
 

@@ -13,6 +13,11 @@ public class ProductAutomatonNode {
     Boolean initialState;
     Boolean finalState;
     public LinkedList<ProductAutomatonEdge> edges;
+    Boolean visited = false;
+
+    public ProductAutomatonNode(){
+
+    }
 
     /**
      * constructor for a productAutomatonNode. it has the form
@@ -31,4 +36,19 @@ public class ProductAutomatonNode {
         edges = new LinkedList<>();
     }
 
+    public void visit() {
+        this.visited = true;
+    }
+
+    public void unvisit(){
+        this.visited = false;
+    }
+
+    public void print(){
+        System.out.println(toString());
+    }
+
+    public String toString(){
+        return String.format("(%s, %s)", identifier.getValue0().identifier, identifier.getValue1().identifier);
+    }
 }

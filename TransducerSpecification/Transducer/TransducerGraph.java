@@ -8,7 +8,7 @@ import java.util.Set;
 // so far we can add nodes or edges to it and print it.
 public class TransducerGraph {
 
-    private Set<TransducerNode> nodes;
+    public Set<TransducerNode> nodes;
 
     public TransducerGraph() {
         nodes = new HashSet<>();
@@ -18,7 +18,7 @@ public class TransducerGraph {
         nodes.addAll(Arrays.asList(n));
     }
 
-    public void addTransducerObjectEdge(TransducerNode source, TransducerNode target, String incoming, String outgoing, int cost) {
+    public void addTransducerObjectEdge(TransducerNode source, TransducerNode target, String incoming, String outgoing, double cost) {
         nodes.add(source);
         nodes.add(target);
 
