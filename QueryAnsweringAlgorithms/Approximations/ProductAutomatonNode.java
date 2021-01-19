@@ -54,6 +54,9 @@ public class ProductAutomatonNode implements Comparable<ProductAutomatonNode> {
     }
 
     public String toStringWithWeight() {
+        if (getWeight() == Double.POSITIVE_INFINITY) {
+            return String.format("(%s, %s, %s)[INF]", identifier.getValue0().identifier, identifier.getValue1().identifier, identifier.getValue2().identifier);
+        } else
         return String.format("(%s, %s, %s)[%s]", identifier.getValue0().identifier, identifier.getValue1().identifier, identifier.getValue2().identifier, getWeight());
     }
 

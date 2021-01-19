@@ -23,7 +23,7 @@ public class ProductAutomatonReachabilityAnalysis {
 
     ProductAutomatonReachabilityAnalysis() {
 
-        String choice = "example_2020";
+        String choice = "example_2006";
         predecessor = new HashMap<>();
         setOfNodes = new HashSet<>();
         queue = new PriorityQueue<>();
