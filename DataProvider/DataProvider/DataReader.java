@@ -16,6 +16,7 @@ import java.util.Scanner;
 public class DataReader {
 
     DataProvider dataProvider = new DataProvider();
+    HashMap<String, Integer> amountOfNodesMap = new HashMap<>();
 
 
     public void readFile() throws Exception {
@@ -125,6 +126,20 @@ public class DataReader {
                 IOException e) {
             e.printStackTrace();
         }
+
+        File stats = new File("output/computationStats.txt");
+        FileWriter out;
+
+        int maxNodeAmountTotal = amountOfNodesMap.get("query") * amountOfNodesMap.get("transducer") * amountOfNodesMap.get("database");
+
+        try {
+            out = new FileWriter(stats, false);
+            out.write("max amount of possible nodes in the product automaton: " + maxNodeAmountTotal + ". \n");
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void processQueryGraphData(ArrayList<String> queryData, int amountOfNodes) {
@@ -136,6 +151,7 @@ public class DataReader {
         String label;
         String[] strArray; // working array ...
 
+        amountOfNodesMap.put("query", amountOfNodes);
         // looping over all nodes
         for (int i = 0; i < amountOfNodes ; i++) {
 
@@ -146,6 +162,7 @@ public class DataReader {
             queryNodes.put(strArray[0], node);
 
         }
+
 
         // looping over all edges
         for (int i = amountOfNodes + 1; i < queryData.size(); i++) {
@@ -170,6 +187,7 @@ public class DataReader {
         String outgoing;
         int cost;
 
+        amountOfNodesMap.put("transducer", amountOfNodes);
         String[] strArray; // working array ...
 
         // looping over all nodes
@@ -214,7 +232,7 @@ public class DataReader {
         String label;
 
         String[] strArray; // working array ...
-
+        amountOfNodesMap.put("database", amountOfNodes);
         // looping over all nodes
         for (int i = 0; i < amountOfNodes ; i++) {
 

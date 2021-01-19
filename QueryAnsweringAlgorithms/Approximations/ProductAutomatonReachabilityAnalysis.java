@@ -2,6 +2,7 @@ package Approximations;
 
 import org.javatuples.Pair;
 
+import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -10,6 +11,7 @@ import java.util.PriorityQueue;
 public class ProductAutomatonReachabilityAnalysis {
 
     ProductAutomatonConstructor productAutomatonConstructor;
+
 
 
     // π[V] - predecessor of V: <V, predecessorOfV>
@@ -125,8 +127,9 @@ public class ProductAutomatonReachabilityAnalysis {
 
     }
 
-    public void processDijkstraOverAllInitialNodes() {
+    public void processDijkstraOverAllInitialNodes() throws FileNotFoundException {
 
+        long start = System.currentTimeMillis();
 
         // for all initial nodes...
         for (ProductAutomatonNode initialNode : productAutomatonConstructor.productAutomatonGraph.initialNodes) {
@@ -144,6 +147,18 @@ public class ProductAutomatonReachabilityAnalysis {
 
 
         }
+
+        // Get elapsed time in milliseconds
+        long elapsedTimeMillis = System.currentTimeMillis()-start;
+
+        // Get elapsed time in seconds
+        float elapsedTimeSec = elapsedTimeMillis/1000F;
+
+        // Get elapsed time in minutes
+        float elapsedTimeMin = elapsedTimeMillis/(60*1000F);
+
+        writeTimeToFile(elapsedTimeMillis, elapsedTimeSec, elapsedTimeMin);
+
 
         printEndResult();
 
@@ -169,13 +184,77 @@ public class ProductAutomatonReachabilityAnalysis {
 
     }
 
-    private void printEndResult() {
+    private void printEndResult() throws FileNotFoundException {
+
+        writeToFile();
+
         System.out.println("------------------");
         System.out.println("end result: ");
         for (Pair pair : answerMap.keySet()) {
             System.out.println("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair));
         }
         System.out.println("computation completed.");
+    }
+    private void writeTimeToFile(long milli, float sec, float min){
+        File stats = new File("output/computationStats.txt");
+        FileWriter out;
+
+        try {
+            int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
+            out = new FileWriter(stats, true);
+
+            out.write("amount of actual nodes in the product automaton: " + amountOfNodes + ". \n");
+            out.write("note that we used the lazy construction. \n ");
+            out.write("\n");
+            out.write("some stats for the dijkstra processing time. \n");
+            out.write("computation time in milliseconds: " + milli + ". \n");
+            out.write("computation time in seconds: " + sec + ". \n");
+            // out.write("computation time in minutes: " + min + ". \n");
+
+
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeToFile() throws FileNotFoundException {
+
+        File queryAnswers = new File ("output/queryResults.txt");
+        FileWriter out;
+        int count = 0;
+        try {
+            out = new FileWriter(queryAnswers, false);
+            out.write("query processed. \n");
+
+            for (Pair pair : answerMap.keySet()) {
+                if (answerMap.get(pair) == 0.0) {
+                    count++;
+                    out.write("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair) + " (classical answer) \n");
+                } else
+                out.write("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair) + "\n");
+            }
+            int classicalAnswers = count;
+            int approxAnswers = answerMap.size() - count;
+            out.write("total answers: " + answerMap.size());
+            out.write(". (" + classicalAnswers + " classical answer(s) and " + approxAnswers + " approximate answer(s).) \n");
+            out.close();
+            System.out.println("successfully wrote to file.");
+
+        } catch (IOException e) {
+            System.out.println("error.");
+            e.printStackTrace();
+        }
+
+        PrintStream fileStream = new PrintStream("output/graphs.txt");
+        PrintStream stdout = System.out;
+        System.setOut(fileStream);
+        System.out.println("the product automaton graph for this computation: \n");
+        productAutomatonConstructor.productAutomatonGraph.printGraph();
+        System.out.println();
+        System.out.println("note that '__' means arbitrary and '' (emptyString) means we read/write an epsilon (both is only relevant for transducer edges). \n");
+        System.setOut(stdout);
     }
 
 
