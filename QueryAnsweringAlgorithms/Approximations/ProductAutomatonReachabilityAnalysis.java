@@ -21,9 +21,9 @@ public class ProductAutomatonReachabilityAnalysis {
     // answerSet
     HashMap<Pair<String, String>, Double> answerMap;
 
-    ProductAutomatonReachabilityAnalysis() {
+    ProductAutomatonReachabilityAnalysis(String choice) {
 
-        String choice = "example_2006";
+        // String choice = "example_2006";
         predecessor = new HashMap<>();
         setOfNodes = new HashSet<>();
         queue = new PriorityQueue<>();
@@ -33,6 +33,18 @@ public class ProductAutomatonReachabilityAnalysis {
         productAutomatonConstructor.construct();
 
     }
+
+
+    public ProductAutomatonReachabilityAnalysis (ProductAutomatonConstructor productAutomatonConstructor) {
+        predecessor = new HashMap<>();
+        setOfNodes = new HashSet<>();
+        queue = new PriorityQueue<>();
+        answerMap = new HashMap<>();
+        this.productAutomatonConstructor = productAutomatonConstructor;
+
+    }
+
+
 
     /**
      * Dijkstra algorithm

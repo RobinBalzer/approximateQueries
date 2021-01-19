@@ -8,6 +8,7 @@ import Transducer.TransducerGraph;
 // initially we provide 2 examples. see the respective classes for their sources.
 public class DataProvider {
 
+    public String datasetIdentifier;
     public QueryGraph queryGraph = new QueryGraph();
     public TransducerGraph transducerGraph = new TransducerGraph();
     public DatabaseGraph databaseGraph = new DatabaseGraph();
@@ -38,18 +39,31 @@ public class DataProvider {
         }
     }
 
-    public QueryGraph getQueryGraph(){
+    public DataProvider() {
+        QueryGraph queryGraph = new QueryGraph();
+        TransducerGraph transducerGraph = new TransducerGraph();
+        DatabaseGraph databaseGraph = new DatabaseGraph();
+    }
+
+    public QueryGraph getQueryGraph() {
         return queryGraph;
     }
 
-    public TransducerGraph getTransducerGraph(){
+    public TransducerGraph getTransducerGraph() {
         return transducerGraph;
     }
 
-    public DatabaseGraph getDatabaseGraph(){
+    public DatabaseGraph getDatabaseGraph() {
         return databaseGraph;
     }
 
+    public void setDatasetIdentifier(String datasetIdentifier) {
+        this.datasetIdentifier = datasetIdentifier;
+    }
+
+    public String getDatasetIdentifier() {
+        return datasetIdentifier;
+    }
 }
 
 

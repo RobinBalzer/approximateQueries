@@ -1,6 +1,7 @@
 package Approximations;
 
 import DataProvider.DataProvider;
+import DataProvider.DataSet;
 import Database.DatabaseEdge;
 import Database.DatabaseGraph;
 import Database.DatabaseNode;
@@ -42,6 +43,13 @@ public class ProductAutomatonConstructor {
         transducerGraph = dataProvider.transducerGraph;
         databaseGraph = dataProvider.databaseGraph;
 
+        productAutomatonGraph = new ProductAutomatonGraph();
+    }
+
+    public ProductAutomatonConstructor(QueryGraph queryGraph, TransducerGraph transducerGraph, DatabaseGraph databaseGraph) {
+        this.queryGraph = queryGraph;
+        this.transducerGraph = transducerGraph;
+        this.databaseGraph = databaseGraph;
         productAutomatonGraph = new ProductAutomatonGraph();
     }
 

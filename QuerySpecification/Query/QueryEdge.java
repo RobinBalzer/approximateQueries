@@ -10,7 +10,7 @@ public class QueryEdge {
     public QueryNode target;
     public String label;
 
-    QueryEdge(QueryNode source, QueryNode target, String label) {
+    public QueryEdge(QueryNode source, QueryNode target, String label) {
         this.source = source;
         this.target = target;
         this.label = label.toLowerCase();
