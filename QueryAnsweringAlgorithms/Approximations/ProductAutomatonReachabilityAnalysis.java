@@ -247,7 +247,7 @@ public class ProductAutomatonReachabilityAnalysis {
             e.printStackTrace();
         }
 
-        PrintStream fileStream = new PrintStream("output/graphs.txt");
+        PrintStream fileStream = new PrintStream( new FileOutputStream("output/graphs.txt", true));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
         System.out.println("the product automaton graph for this computation: \n");

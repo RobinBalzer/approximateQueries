@@ -6,6 +6,8 @@ import Database.DatabaseGraph;
 import Query.QueryGraph;
 import Transducer.TransducerGraph;
 
+import java.io.PrintStream;
+
 public class DataReaderExample {
 
     public static void main (String[] args) throws Exception {
@@ -16,13 +18,24 @@ public class DataReaderExample {
         TransducerGraph transducerGraph = dataReader.dataProvider.getTransducerGraph();
         DatabaseGraph databaseGraph = dataReader.dataProvider.getDatabaseGraph();
 
-        printSpace();
+        PrintStream fileStream = new PrintStream("output/graphs.txt");
+        PrintStream stdout = System.out;
+        System.setOut(fileStream);
+
+
+        System.out.println("query graph: ");
         queryGraph.printGraph();
         printSpace();
+
+        System.out.println("transducer graph: ");
         transducerGraph.printGraph();
         printSpace();
+
+        System.out.println("database graph: ");
         databaseGraph.printGraph();
         printSpace();
+
+        System.setOut(stdout);
 
        ProductAutomatonConstructor productAutomatonConstructor = new ProductAutomatonConstructor(queryGraph, transducerGraph, databaseGraph);
        productAutomatonConstructor.construct();
