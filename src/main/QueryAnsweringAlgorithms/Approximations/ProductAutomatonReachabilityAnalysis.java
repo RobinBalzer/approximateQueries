@@ -196,7 +196,7 @@ public class ProductAutomatonReachabilityAnalysis {
         System.out.println("computation completed.");
     }
     private void writeTimeToFile(long milli, float sec, float min){
-        File stats = new File("output/computationStats.txt");
+        File stats = new File("src/main/resources/output/computationStats.txt");
         FileWriter out;
 
         try {
@@ -221,13 +221,15 @@ public class ProductAutomatonReachabilityAnalysis {
 
     private void writeToFile() throws FileNotFoundException {
 
-        File queryAnswers = new File ("output/queryResults.txt");
+        File queryAnswers = new File ("src/main/resources/output/queryResults.txt");
         FileWriter out;
         int count = 0;
         try {
             out = new FileWriter(queryAnswers, false);
             out.write("query processed. \n");
 
+            // TODO: this doesn't really work correctly, right? We print every connection with weight 0.0 as a classical,
+            // TODO: but we should verify this with the path or the product automaton edges... (new attribute "classical"?)
             for (Pair pair : answerMap.keySet()) {
                 if (answerMap.get(pair) == 0.0) {
                     count++;
@@ -247,13 +249,13 @@ public class ProductAutomatonReachabilityAnalysis {
             e.printStackTrace();
         }
 
-        PrintStream fileStream = new PrintStream( new FileOutputStream("output/graphs.txt", true));
+        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", true));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
         System.out.println("the product automaton graph for this computation: \n");
         productAutomatonConstructor.productAutomatonGraph.printGraph();
         System.out.println();
-        System.out.println("note that '__' means arbitrary and '' (emptyString) means we read/write an epsilon (both is only relevant for transducer edges). \n");
+        System.out.println("note that '' (emptyString) means we read/write an epsilon. \n");
         System.setOut(stdout);
     }
 

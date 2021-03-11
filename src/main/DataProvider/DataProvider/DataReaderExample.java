@@ -18,7 +18,7 @@ public class DataReaderExample {
         TransducerGraph transducerGraph = dataReader.dataProvider.getTransducerGraph();
         DatabaseGraph databaseGraph = dataReader.dataProvider.getDatabaseGraph();
 
-        PrintStream fileStream = new PrintStream("output/graphs.txt");
+        PrintStream fileStream = new PrintStream("src/main/resources/output/graphs.txt");
         PrintStream stdout = System.out;
         System.setOut(fileStream);
 

@@ -1,7 +1,6 @@
 package Approximations;
 
 import DataProvider.DataProvider;
-import DataProvider.DataSet;
 import Database.DatabaseEdge;
 import Database.DatabaseGraph;
 import Database.DatabaseNode;
@@ -142,7 +141,10 @@ public class ProductAutomatonConstructor {
                     for (DatabaseEdge databaseEdge : databaseNode.edges) {
                         String localDatabaseLabel = databaseEdge.label;
 
+                        // TODO: delete this part (III (1)) and adjust the javadoc.
+                        // code cleanup: put this into the addEdge function.
                         // (1)
+                        /*
                         if (localQueryLabel.equals(localDatabaseLabel)) {
                             // found a fitting (classical) edge!
 
@@ -170,6 +172,8 @@ public class ProductAutomatonConstructor {
                             // add the edge to the productAutomaton
                             productAutomatonGraph.addProductAutomatonEdge(sourceNode1, targetNode1, localQueryLabel, localQueryLabel, 0.0);
                         }
+
+                         */
 
                         // (2)
                         // for all transducer edges that were found in part (II):
@@ -205,6 +209,7 @@ public class ProductAutomatonConstructor {
                                 productAutomatonGraph.addProductAutomatonEdge(sourceNode4, targetNode4, localQueryLabel, "", transducerEdge.cost);
 
                             }
+
 
                             if (transducerEdge.outgoingString.equals(localDatabaseLabel)) {
                                 // found a fitting (transduced) edge!

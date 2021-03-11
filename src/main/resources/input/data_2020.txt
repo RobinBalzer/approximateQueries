@@ -11,7 +11,7 @@ s0, s2, v1
 s2, s1, u1
 transducerGraph:
 nodes:
-t0, true, false
+t0, true, true
 t1, false, false
 t2, false, false
 t3, false, true

@@ -1,15 +1,11 @@
 package DataProvider;
 
 import Database.DatabaseNode;
-import Query.QueryEdge;
-import Query.QueryGraph;
 import Query.QueryNode;
 import Transducer.TransducerNode;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -27,7 +23,7 @@ public class DataReader {
         System.out.println("Enter the file name you want to process ");
         fileName = scanner.nextLine();
 
-        String path = "input/" + fileName;
+        String path = "src/main/resources/input/" + fileName;
 
         try {
             File file = new File(path);
@@ -127,7 +123,7 @@ public class DataReader {
             e.printStackTrace();
         }
 
-        File stats = new File("output/computationStats.txt");
+        File stats = new File("src/main/resources/output/computationStats.txt");
         FileWriter out;
 
         int maxNodeAmountTotal = amountOfNodesMap.get("query") * amountOfNodesMap.get("transducer") * amountOfNodesMap.get("database");
