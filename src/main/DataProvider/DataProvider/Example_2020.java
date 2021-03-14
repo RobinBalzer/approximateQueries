@@ -17,7 +17,6 @@ public class Example_2020 implements InternalDataBuilder {
     @Override
     public QueryGraph fillQueryGraph() {
         QueryGraph queryGraph = new QueryGraph();
-
         QueryNode s0 = new QueryNode("s0", true, false);
         QueryNode s1 = new QueryNode("s1", false, true);
         QueryNode s2 = new QueryNode("s2", false, false);

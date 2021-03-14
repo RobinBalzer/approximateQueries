@@ -10,9 +10,15 @@ import java.io.PrintStream;
 
 public class DataReaderExample {
 
+    /**
+     * outdated main class. new main class is src/main/java/main.
+     * @param args
+     * @throws Exception
+     */
+    /*
     public static void main (String[] args) throws Exception {
         DataReader dataReader = new DataReader();
-        dataReader.readFile();
+        dataReader.readFile("");
 
         QueryGraph queryGraph = dataReader.dataProvider.getQueryGraph();
         TransducerGraph transducerGraph = dataReader.dataProvider.getTransducerGraph();
@@ -47,5 +53,5 @@ public class DataReaderExample {
     public static void printSpace(){
         System.out.println("---");
     }
-
+*/
 }

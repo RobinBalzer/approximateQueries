@@ -5,25 +5,25 @@ import Query.QueryNode;
 import Transducer.TransducerNode;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class DataReader {
+    private String path;
+    private boolean transducerAutoGeneration;
+    private Set<String> alphabet;
+
+    public DataReader(String inputFile, boolean transducerAutoGeneration) {
+        this.path = "src/main/resources/input/" + inputFile;
+        this.transducerAutoGeneration = transducerAutoGeneration;
+        alphabet = new HashSet<>();
+    }
 
     DataProvider dataProvider = new DataProvider();
     HashMap<String, Integer> amountOfNodesMap = new HashMap<>();
 
 
     public void readFile() throws Exception {
-
-
-        String fileName;
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the file name you want to process ");
-        fileName = scanner.nextLine();
-
-        String path = "src/main/resources/input/" + fileName;
 
         try {
             File file = new File(path);
@@ -72,24 +72,41 @@ public class DataReader {
 
                 // read all the data for the transducer graph.
                 if (st.contains("transducerGraph:")) {
-                    System.out.println("Found 'transducerGraph:' ");
-                    ArrayList<String> transducerGraphData = new ArrayList<>();
-                    amountOfNodes = 0;
-                    st = br.readLine();
 
-                    if (st.contains("nodes:")) {
+                    if (transducerAutoGeneration) {
+                        System.out.println("Transducer info skipped. Initializing auto generation of transducer ...");
+                        createTransducerPreservingClassicalAnswers();
+
+
+                        do {
+                            st = br.readLine();
+
+                        }
+                        while (!st.contains("databaseGraph:"));
+
+                        System.out.println(" ... done. Proceeding with database data.");
+
+                    } else {
+
+                        System.out.println("Found 'transducerGraph:' ");
+                        ArrayList<String> transducerGraphData = new ArrayList<>();
+                        amountOfNodes = 0;
                         st = br.readLine();
+
+                        if (st.contains("nodes:")) {
+                            st = br.readLine();
+                        }
+                        do {
+                            if (!st.contains("edges:") && !transducerEdgeFinder) {
+                                amountOfNodes++;
+                            } else transducerEdgeFinder = true;
+
+                            transducerGraphData.add(st);
+                            st = br.readLine();
+
+                        } while (!st.contains("databaseGraph:"));
+                        processTransducerGraphData(transducerGraphData, amountOfNodes);
                     }
-                    do {
-                        if (!st.contains("edges:") && !transducerEdgeFinder) {
-                            amountOfNodes++;
-                        } else transducerEdgeFinder = true;
-
-                        transducerGraphData.add(st);
-                        st = br.readLine();
-
-                    } while (!st.contains("databaseGraph:"));
-                    processTransducerGraphData(transducerGraphData, amountOfNodes);
                 }
 
                 // read all the data for the database graph.
@@ -108,12 +125,11 @@ public class DataReader {
                         } else databaseEdgeFinder = true;
 
                         databaseGraphData.add(st);
-                       // st = br.readLine();
+                        // st = br.readLine();
 
                     } while ((st = br.readLine()) != null);
                     processDatabaseGraphData(databaseGraphData, amountOfNodes);
                 }
-
 
 
             }
@@ -149,7 +165,7 @@ public class DataReader {
 
         amountOfNodesMap.put("query", amountOfNodes);
         // looping over all nodes
-        for (int i = 0; i < amountOfNodes ; i++) {
+        for (int i = 0; i < amountOfNodes; i++) {
 
             strArray = queryData.get(i).split(",");
             strArray = removeWhiteSpace(strArray);
@@ -169,12 +185,13 @@ public class DataReader {
             target = queryNodes.get(strArray[1]);
             label = strArray[2];
 
+            alphabet.add(label);
             dataProvider.queryGraph.addQueryObjectEdge(source, target, label);
         }
     }
 
 
-    private void processTransducerGraphData(ArrayList<String> transducerData, int amountOfNodes){
+    private void processTransducerGraphData(ArrayList<String> transducerData, int amountOfNodes) {
         HashMap<String, TransducerNode> transducerNodes = new HashMap<>();  // map containing the transducerNodes
         TransducerNode source;
         TransducerNode target;
@@ -204,23 +221,23 @@ public class DataReader {
             target = transducerNodes.get(strArray[1]);
 
             // replace ε with empty string ""
-            if (strArray[2].equals("ε")){
+            if (strArray[2].equals("ε")) {
                 incoming = "";
             } else incoming = strArray[2];
 
             // replace ε with empty string ""
-            if (strArray[3].equals("ε")){
+            if (strArray[3].equals("ε")) {
                 outgoing = "";
             } else outgoing = strArray[3];
 
             cost = Integer.parseInt(strArray[4]);
 
-            dataProvider.transducerGraph.addTransducerObjectEdge(source, target, incoming, outgoing, cost );
+            dataProvider.transducerGraph.addTransducerObjectEdge(source, target, incoming, outgoing, cost);
         }
 
     }
 
-    private void processDatabaseGraphData(ArrayList<String> databaseData, int amountOfNodes){
+    private void processDatabaseGraphData(ArrayList<String> databaseData, int amountOfNodes) {
         HashMap<String, DatabaseNode> databaseNodes = new HashMap<>();  // map containing the databaseNodes
         DatabaseNode source;
         DatabaseNode target;
@@ -230,7 +247,7 @@ public class DataReader {
         String[] strArray; // working array ...
         amountOfNodesMap.put("database", amountOfNodes);
         // looping over all nodes
-        for (int i = 0; i < amountOfNodes ; i++) {
+        for (int i = 0; i < amountOfNodes; i++) {
 
             strArray = databaseData.get(i).split(",");
             strArray = removeWhiteSpace(strArray);
@@ -251,6 +268,33 @@ public class DataReader {
 
             dataProvider.databaseGraph.addDatabaseObjectEdge(source, target, label);
         }
+    }
+
+    /**
+     * auto-generation of a transducer. this transducer will only preserve classical answers.
+     * design choice: only one source and target node with n edges between them (alphabet size = n)
+     * other variation could be: having n source and target nodes with only one edge between them.
+     * other variation could be: having one node (initial and final) and n self-loops (alphabet size = n)
+     */
+    private void createTransducerPreservingClassicalAnswers() {
+
+        TransducerNode source = new TransducerNode("s0", true, false);
+        TransducerNode target = new TransducerNode("s1", false, true);
+        String word; // working String
+        String incoming;
+        String outgoing;
+        int cost = 0;
+
+        for (String s : alphabet) {
+            word = s;
+            incoming = word;
+            outgoing = word;
+
+            dataProvider.transducerGraph.addTransducerObjectEdge(source, target, incoming, outgoing, cost);
+        }
+
+        amountOfNodesMap.put("transducer", 2);
+
     }
 
     private String[] removeWhiteSpace(String[] words) {

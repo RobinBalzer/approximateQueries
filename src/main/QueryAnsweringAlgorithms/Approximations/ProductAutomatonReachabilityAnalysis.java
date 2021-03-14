@@ -75,9 +75,7 @@ public class ProductAutomatonReachabilityAnalysis {
             setOfNodes.add(p);
             // line 7
             for (ProductAutomatonEdge edge : p.edges) {
-                if (!setOfNodes.contains(edge.target)) {
-                    setOfNodes.add(edge.target);
-                }
+                setOfNodes.add(edge.target);
 
                 System.out.print(p.toStringWithWeight() + ", " + edge.target.toStringWithWeight() + ", edge: " );
                 edge.print();
