@@ -50,11 +50,7 @@ public class StatsTracker {
         // start of the computation
         long start = System.currentTimeMillis();
 
-        System.out.println("start...");
-
         answerMap = productAutomatonReachabilityAnalysis.processDijkstraOverAllInitialNodes();
-        System.out.println("finish...");
-
 
         // Get elapsed time in milliseconds
         long elapsedTimeMillis = System.currentTimeMillis() - start;

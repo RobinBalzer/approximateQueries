@@ -45,7 +45,7 @@ public class DataReader {
 
                 // start with finding out about the name of the data set
                 if (st.contains("name:")) {
-                    System.out.println("Found 'name:' ");
+                   // System.out.println("Found 'name:' ");
                     words = st.split("name: ");
                     dataProvider.setDatasetIdentifier(words[1].trim());
                     st = br.readLine();
@@ -53,7 +53,7 @@ public class DataReader {
 
                 // read all the data for the queryGraph...
                 if (st.contains("queryGraph:")) {
-                    System.out.println("Found 'queryGraph:' ");
+                   // System.out.println("Found 'queryGraph:' ");
                     ArrayList<String> queryGraphData = new ArrayList<>();
                     amountOfNodes = 0;
                     st = br.readLine();
@@ -77,7 +77,7 @@ public class DataReader {
                 if (st.contains("transducerGraph:")) {
 
                     if (transducerAutoGeneration) {
-                        System.out.println("Transducer info skipped. Initializing auto generation of transducer ...");
+                        // System.out.println("Transducer info skipped. Initializing auto generation of transducer ...");
                         createTransducerPreservingClassicalAnswers();
 
 
@@ -87,11 +87,11 @@ public class DataReader {
                         }
                         while (!st.contains("databaseGraph:"));
 
-                        System.out.println(" ... done. Proceeding with database data.");
+                        // System.out.println(" ... done. Proceeding with database data.");
 
                     } else {
 
-                        System.out.println("Found 'transducerGraph:' ");
+                        // System.out.println("Found 'transducerGraph:' ");
                         ArrayList<String> transducerGraphData = new ArrayList<>();
                         amountOfNodes = 0;
                         st = br.readLine();
@@ -114,7 +114,7 @@ public class DataReader {
 
                 // read all the data for the database graph.
                 if (st.contains("databaseGraph:")) {
-                    System.out.println("Found 'databaseGraph:' ");
+                    // System.out.println("Found 'databaseGraph:' ");
                     ArrayList<String> databaseGraphData = new ArrayList<>();
                     amountOfNodes = 0;
                     st = br.readLine();

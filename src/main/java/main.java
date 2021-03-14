@@ -24,7 +24,6 @@ public class main {
         SearchHandler searchHandler;
         Scanner scanner = new Scanner(System.in);
 
-        /*
 
         // receive the file name we want to compute
         System.out.println("Enter the file name you want to process (has to be stored in src/main/resources/input/): ");
@@ -36,10 +35,6 @@ public class main {
         System.out.println("provide transducer yourself (y) or generate a transducer (n): ");
         userChoiceTransducerMode = scanner.next();
 
-        */
-
-        userChoiceTransducerMode = "y";
-        userChoiceFileInput= "data_2020.txt";
         if (userChoiceTransducerMode.matches("yes|y|si")) {
             dataReader = new DataReader(userChoiceFileInput, false);
 
@@ -55,7 +50,8 @@ public class main {
         dataReader.printData();
 
         // receive the mode of the search
-        System.out.println("Select the mode you want to start the application! enter ... \n 1 for searchAll \n 2 for searchTopK");
+        System.out.println("Select the mode you want to start the application! \n (1) a complete search \n (2) a top k search" );
+        System.out.print("Enter 1 or 2: ");
         userChoiceComputationMode = scanner.next();
 
         DataProvider dataProvider = dataReader.getDataProvider();
