@@ -1,7 +1,10 @@
 package DataProvider;
 
+import Database.DatabaseGraph;
 import Database.DatabaseNode;
+import Query.QueryGraph;
 import Query.QueryNode;
+import Transducer.TransducerGraph;
 import Transducer.TransducerNode;
 
 import java.io.*;
@@ -12,16 +15,16 @@ public class DataReader {
     private String path;
     private boolean transducerAutoGeneration;
     private Set<String> alphabet;
+    private DataProvider dataProvider;
+    private HashMap<String, Integer> amountOfNodesMap;
 
     public DataReader(String inputFile, boolean transducerAutoGeneration) {
         this.path = "src/main/resources/input/" + inputFile;
         this.transducerAutoGeneration = transducerAutoGeneration;
         alphabet = new HashSet<>();
+        dataProvider = new DataProvider();
+        amountOfNodesMap = new HashMap<>();
     }
-
-    DataProvider dataProvider = new DataProvider();
-    HashMap<String, Integer> amountOfNodesMap = new HashMap<>();
-
 
     public void readFile() throws Exception {
 
@@ -303,5 +306,57 @@ public class DataReader {
             wordsWithoutWhitespace[i] = words[i].trim();
         }
         return wordsWithoutWhitespace;
+    }
+
+    public void printData() throws FileNotFoundException {
+
+
+        try {
+
+            QueryGraph queryGraph = dataProvider.getQueryGraph();
+            TransducerGraph transducerGraph = dataProvider.getTransducerGraph();
+            DatabaseGraph databaseGraph = dataProvider.getDatabaseGraph();
+
+            PrintStream fileStream = new PrintStream("src/main/resources/output/parsedInputData.txt");
+            PrintStream stdout = System.out;
+            System.setOut(fileStream);
+
+
+            System.out.println("query graph: ");
+            queryGraph.printGraph();
+            printSpace();
+
+            System.out.println("transducer graph: ");
+            transducerGraph.printGraph();
+            printSpace();
+
+            System.out.println("database graph: ");
+            databaseGraph.printGraph();
+            printSpace();
+
+            System.setOut(stdout);
+
+        } catch (IOException e) {
+            System.out.println("error.");
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void printSpace() {
+        System.out.println("---");
+    }
+
+
+    public Set<String> getAlphabet() {
+        return alphabet;
+    }
+
+    public DataProvider getDataProvider() {
+        return dataProvider;
+    }
+
+    public HashMap<String, Integer> getAmountOfNodesMap() {
+        return amountOfNodesMap;
     }
 }

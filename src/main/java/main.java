@@ -1,3 +1,4 @@
+import DataProvider.DataProvider;
 import DataProvider.DataReader;
 
 import java.util.Scanner;
@@ -20,8 +21,10 @@ public class main {
         String userChoiceFileInput;
 
         DataReader dataReader;
-        SearchHandler searchHandler = new SearchHandler();
+        SearchHandler searchHandler;
         Scanner scanner = new Scanner(System.in);
+
+        /*
 
         // receive the file name we want to compute
         System.out.println("Enter the file name you want to process (has to be stored in src/main/resources/input/): ");
@@ -33,28 +36,35 @@ public class main {
         System.out.println("provide transducer yourself (y) or generate a transducer (n): ");
         userChoiceTransducerMode = scanner.next();
 
+        */
+
+        userChoiceTransducerMode = "y";
+        userChoiceFileInput= "data_2020.txt";
         if (userChoiceTransducerMode.matches("yes|y|si")) {
             dataReader = new DataReader(userChoiceFileInput, false);
+
         } else {
             dataReader = new DataReader(userChoiceFileInput, true);
         }
 
+        searchHandler = new SearchHandler(dataReader.getDataProvider());
+
+        // processes the data
         dataReader.readFile();
-        // TODO: read and provide data...
+        // testing if the parsing was successful and correct -> check "parsedInputData.txt"
+        dataReader.printData();
 
         // receive the mode of the search
-        System.out.println("Enter the mode you want to start the application! current supported modes: 'searchAll', 'searchTopK_LO', 'searchTopK_GO'. ");
+        System.out.println("Select the mode you want to start the application! enter ... \n 1 for searchAll \n 2 for searchTopK");
         userChoiceComputationMode = scanner.next();
 
+        DataProvider dataProvider = dataReader.getDataProvider();
         switch (userChoiceComputationMode) {
-            case "searchAll":
-                searchHandler.searchAllAnswers();
+            case "1":
+                searchHandler.searchAllAnswers(dataProvider);
                 break;
-            case "searchTopK_LO":
-                searchHandler.searchTopKAnswersLocallyOptimized(receive_k());
-                break;
-            case "searchTopK_GO":
-                searchHandler.searchTopKAnswersGloballyOptimized(receive_k());
+            case "2":
+                searchHandler.searchTopKAnswers(dataProvider, receive_k());
                 break;
             default:
                 System.out.println("invalid input. restart and enter a valid input. Check ReadMe for more info.");
@@ -79,8 +89,6 @@ public class main {
         System.out.println("|  \\/    |_| |_| \\___| \\___/ \\____/ \\___/  \\__, | |");
         System.out.println("|                                          |___/  |");
         System.out.println("└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘");
-        System.out.println();
-        System.out.println();
         System.out.println();
 
     }

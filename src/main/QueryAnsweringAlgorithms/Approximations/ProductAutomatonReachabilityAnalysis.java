@@ -13,15 +13,19 @@ public class ProductAutomatonReachabilityAnalysis {
     ProductAutomatonConstructor productAutomatonConstructor;
 
 
-
     // π[V] - predecessor of V: <V, predecessorOfV>
     HashMap<ProductAutomatonNode, ProductAutomatonNode> predecessor;
-    // set S
+    // set S of nodes (vertices) whose final shortest-path weights from the source have already been determined.
     HashSet<ProductAutomatonNode> setOfNodes;
     // min-priority queue Q (note that by default a priority queue in java is a min queue!)
     PriorityQueue<ProductAutomatonNode> queue;
     // answerSet
     HashMap<Pair<String, String>, Double> answerMap;
+    // int for the user input top_k search
+    int topK;
+    int localTopK;
+    // boolean describing the search state we are in. false => "searchALl", true => "searchTopK"
+    boolean topKSearchActive;
 
     ProductAutomatonReachabilityAnalysis(String choice) {
 
@@ -37,15 +41,29 @@ public class ProductAutomatonReachabilityAnalysis {
     }
 
 
-    public ProductAutomatonReachabilityAnalysis (ProductAutomatonConstructor productAutomatonConstructor) {
+    public ProductAutomatonReachabilityAnalysis(ProductAutomatonConstructor productAutomatonConstructor) {
         predecessor = new HashMap<>();
         setOfNodes = new HashSet<>();
         queue = new PriorityQueue<>();
         answerMap = new HashMap<>();
         this.productAutomatonConstructor = productAutomatonConstructor;
+        this.topKSearchActive = false;
+
 
     }
 
+    public ProductAutomatonReachabilityAnalysis(ProductAutomatonConstructor productAutomatonConstructor, int topK) {
+        predecessor = new HashMap<>();
+        setOfNodes = new HashSet<>();
+        queue = new PriorityQueue<>();
+        answerMap = new HashMap<>();
+        this.productAutomatonConstructor = productAutomatonConstructor;
+        this.topKSearchActive = true;
+        this.topK = topK;
+        localTopK = topK;
+        System.out.println("topK: " + topK);
+        System.out.println("localTopK: " + localTopK);
+    }
 
 
     /**
@@ -76,11 +94,6 @@ public class ProductAutomatonReachabilityAnalysis {
             // line 7
             for (ProductAutomatonEdge edge : p.edges) {
                 setOfNodes.add(edge.target);
-
-                System.out.print(p.toStringWithWeight() + ", " + edge.target.toStringWithWeight() + ", edge: " );
-                edge.print();
-                System.out.println();
-
                 // line 8
                 relax(p, edge.target, edge);
 
@@ -125,9 +138,8 @@ public class ProductAutomatonReachabilityAnalysis {
 
     }
 
-    public void processDijkstraOverAllInitialNodes() throws FileNotFoundException {
+    public HashMap<Pair<String, String>, Double> processDijkstraOverAllInitialNodes() {
 
-        long start = System.currentTimeMillis();
 
         // for all initial nodes...
         for (ProductAutomatonNode initialNode : productAutomatonConstructor.productAutomatonGraph.initialNodes) {
@@ -136,126 +148,27 @@ public class ProductAutomatonReachabilityAnalysis {
             predecessor.clear();
             queue.clear();
 
+            // run single-source dijkstra
             algo_dijkstra(initialNode);
+            // put the new shortest-paths into the answer set
             retrieveResultForOneInitialNode(initialNode);
-
-            // System.out.println("set of predecessors " + predecessor);
-            // System.out.println("setOfNodes (should contain every node " + setOfNodes);
-            // System.out.println("queue (should be empty) " +  queue);
-
 
         }
 
-        // Get elapsed time in milliseconds
-        long elapsedTimeMillis = System.currentTimeMillis()-start;
-
-        // Get elapsed time in seconds
-        float elapsedTimeSec = elapsedTimeMillis/1000F;
-
-        // Get elapsed time in minutes
-        float elapsedTimeMin = elapsedTimeMillis/(60*1000F);
-
-        writeTimeToFile(elapsedTimeMillis, elapsedTimeSec, elapsedTimeMin);
-
-
-        printEndResult();
+        return answerMap;
 
     }
 
     private void retrieveResultForOneInitialNode(ProductAutomatonNode initialNode) {
 
-        System.out.println("------------------");
-        System.out.println("reachable final nodes from initial node " + initialNode.toString() + " : ");
-
-
+        // for all nodes in set S
         for (ProductAutomatonNode node : setOfNodes) {
-            // System.out.println(node.toString() + " " + node.finalState + " " + node.getWeight());
-            System.out.println(node.toStringWithWeight());
+            // if you are a final state and your weight is not infinite (that means there is a path from the source to you)
             if (node.finalState && !node.getWeight().isInfinite()) {
-                System.out.println(node.toString() + " with cost " + node.getWeight());
+                // I add you to the final answerSet in the form of ((source, target), weight)
                 Pair<String, String> answerPair = new Pair(initialNode.identifier.getValue2().identifier, node.identifier.getValue2().identifier);
                 answerMap.put(answerPair, node.getWeight());
             }
         }
-
-        System.out.println("------------------");
-
     }
-
-    private void printEndResult() throws FileNotFoundException {
-
-        writeToFile();
-
-        System.out.println("------------------");
-        System.out.println("end result: ");
-        for (Pair pair : answerMap.keySet()) {
-            System.out.println("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair));
-        }
-        System.out.println("computation completed.");
-    }
-    private void writeTimeToFile(long milli, float sec, float min){
-        File stats = new File("src/main/resources/output/computationStats.txt");
-        FileWriter out;
-
-        try {
-            int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
-            out = new FileWriter(stats, true);
-
-            out.write("amount of actual nodes in the product automaton: " + amountOfNodes + ". \n");
-            out.write("note that we used the lazy construction. \n ");
-            out.write("\n");
-            out.write("some stats for the dijkstra processing time. \n");
-            out.write("computation time in milliseconds: " + milli + ". \n");
-            out.write("computation time in seconds: " + sec + ". \n");
-            // out.write("computation time in minutes: " + min + ". \n");
-
-
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void writeToFile() throws FileNotFoundException {
-
-        File queryAnswers = new File ("src/main/resources/output/queryResults.txt");
-        FileWriter out;
-        int count = 0;
-        try {
-            out = new FileWriter(queryAnswers, false);
-            out.write("query processed. \n");
-
-            // TODO: this doesn't really work correctly, right? We print every connection with weight 0.0 as a classical,
-            // TODO: but we should verify this with the path or the product automaton edges... (new attribute "classical"?)
-            for (Pair pair : answerMap.keySet()) {
-                if (answerMap.get(pair) == 0.0) {
-                    count++;
-                    out.write("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair) + " (classical answer) \n");
-                } else
-                out.write("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair) + "\n");
-            }
-            int classicalAnswers = count;
-            int approxAnswers = answerMap.size() - count;
-            out.write("total answers: " + answerMap.size());
-            out.write(". (" + classicalAnswers + " classical answer(s) and " + approxAnswers + " approximate answer(s).) \n");
-            out.close();
-            System.out.println("successfully wrote to file.");
-
-        } catch (IOException e) {
-            System.out.println("error.");
-            e.printStackTrace();
-        }
-
-        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", true));
-        PrintStream stdout = System.out;
-        System.setOut(fileStream);
-        System.out.println("the product automaton graph for this computation: \n");
-        productAutomatonConstructor.productAutomatonGraph.printGraph();
-        System.out.println();
-        System.out.println("note that '' (emptyString) means we read/write an epsilon. \n");
-        System.setOut(stdout);
-    }
-
-
 }
