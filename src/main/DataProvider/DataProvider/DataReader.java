@@ -14,15 +14,14 @@ import java.util.logging.Logger;
 public class DataReader {
     private String path;
     private boolean transducerAutoGeneration;
-    private Set<String> alphabet;
     private DataProvider dataProvider;
     private HashMap<String, Integer> amountOfNodesMap;
 
     public DataReader(String inputFile, boolean transducerAutoGeneration) {
         this.path = "src/main/resources/input/" + inputFile;
         this.transducerAutoGeneration = transducerAutoGeneration;
-        alphabet = new HashSet<>();
         dataProvider = new DataProvider();
+        dataProvider.alphabet = new HashSet<>();
         amountOfNodesMap = new HashMap<>();
     }
 
@@ -47,7 +46,7 @@ public class DataReader {
                 if (st.contains("name:")) {
                    // System.out.println("Found 'name:' ");
                     words = st.split("name: ");
-                    dataProvider.setDatasetIdentifier(words[1].trim());
+                    dataProvider.setDataSetIdentifier(words[1].trim());
                     st = br.readLine();
                 }
 
@@ -188,7 +187,7 @@ public class DataReader {
             target = queryNodes.get(strArray[1]);
             label = strArray[2];
 
-            alphabet.add(label);
+            dataProvider.alphabet.add(label);
             dataProvider.queryGraph.addQueryObjectEdge(source, target, label);
         }
     }
@@ -288,7 +287,7 @@ public class DataReader {
         String outgoing;
         int cost = 0;
 
-        for (String s : alphabet) {
+        for (String s : dataProvider.alphabet) {
             word = s;
             incoming = word;
             outgoing = word;
@@ -347,16 +346,8 @@ public class DataReader {
         System.out.println("---");
     }
 
-
-    public Set<String> getAlphabet() {
-        return alphabet;
-    }
-
     public DataProvider getDataProvider() {
         return dataProvider;
     }
 
-    public HashMap<String, Integer> getAmountOfNodesMap() {
-        return amountOfNodesMap;
-    }
 }

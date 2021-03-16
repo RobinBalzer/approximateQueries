@@ -27,20 +27,6 @@ public class ProductAutomatonReachabilityAnalysis {
     // boolean describing the search state we are in. false => "searchALl", true => "searchTopK"
     boolean topKSearchActive;
 
-    ProductAutomatonReachabilityAnalysis(String choice) {
-
-        // String choice = "example_2006";
-        predecessor = new HashMap<>();
-        setOfNodes = new HashSet<>();
-        queue = new PriorityQueue<>();
-        answerMap = new HashMap<>();
-
-        productAutomatonConstructor = new ProductAutomatonConstructor(choice);
-        productAutomatonConstructor.construct();
-
-    }
-
-
     public ProductAutomatonReachabilityAnalysis(ProductAutomatonConstructor productAutomatonConstructor) {
         predecessor = new HashMap<>();
         setOfNodes = new HashSet<>();

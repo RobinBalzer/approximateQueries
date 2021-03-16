@@ -34,16 +34,7 @@ public class ProductAutomatonConstructor {
      *
      * @param choice the data choice.
      */
-    ProductAutomatonConstructor(String choice) {
-        this.choice = choice;
-        dataProvider = new DataProvider(choice);
 
-        queryGraph = dataProvider.queryGraph;
-        transducerGraph = dataProvider.transducerGraph;
-        databaseGraph = dataProvider.databaseGraph;
-
-        productAutomatonGraph = new ProductAutomatonGraph();
-    }
 
     public ProductAutomatonConstructor(QueryGraph queryGraph, TransducerGraph transducerGraph, DatabaseGraph databaseGraph) {
         this.queryGraph = queryGraph;
@@ -86,7 +77,9 @@ public class ProductAutomatonConstructor {
      * -> Yes?: we add the following edge to the productAutomaton:
      * (source) -[label/label/0]-> (target)
      * <p>
-     * (2) the "transduced" label is present in the databaseGraph.
+     * (2) the "transduced" label is present in the databaseGraph. TODO: here we check (label \in alphabet_pos) or (label \in alphabet_neg)
+     *                                                             TODO: if (1) add positive edge (as we do at the moment)
+     *                                                             TODO: else if (2) add neg edge (from target to source with label (label should be negative)
      * -> Yes?: we add the following edge to the productAutomaton:
      * (source) -[label/transducedLabel/cost]-> (target)
      * <br/> --- <br/>

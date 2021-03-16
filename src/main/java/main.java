@@ -50,7 +50,7 @@ public class main {
         dataReader.printData();
 
         // receive the mode of the search
-        System.out.println("Select the mode you want to start the application! \n (1) a complete search \n (2) a top k search" );
+        System.out.println("Select the mode you want to start the application! \n (1) a complete search \n (2) a top k search (currently not working; 2021_03_16)" );
         System.out.print("Enter 1 or 2: ");
         userChoiceComputationMode = scanner.next();
 
