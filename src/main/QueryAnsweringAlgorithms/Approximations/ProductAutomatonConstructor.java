@@ -10,6 +10,7 @@ import Query.QueryNode;
 import Transducer.TransducerEdge;
 import Transducer.TransducerGraph;
 import Transducer.TransducerNode;
+import org.javatuples.Pair;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ public class ProductAutomatonConstructor {
     QueryGraph queryGraph;
     TransducerGraph transducerGraph;
     DatabaseGraph databaseGraph;
+    EdgeType edgeType;
 
     ProductAutomatonGraph productAutomatonGraph;
 
@@ -32,7 +34,9 @@ public class ProductAutomatonConstructor {
      * We call it with a String for our choice of data.
      * The constructor then overwrites the queryGraph, transducerGraph and databaseGraph with the according data received from the dataProvider.
      *
-     * @param choice the data choice.
+     * @param queryGraph      the query graph
+     * @param transducerGraph the transducer graph
+     * @param databaseGraph   the database graph
      */
 
 
@@ -46,8 +50,8 @@ public class ProductAutomatonConstructor {
 
     /**
      * this function constructs the productAutomaton.
-     * It takes the queryGraph, transducerGraph and databaseGraph and adds edges to the productAutomatonGraph if the following conditions hold:
-     * (a) the queryGraph has an edge whose label is represented in the databaseGraph
+     * It takes the queryGraph, transducerGraph and databaseGraph and adds edges to the productAutomatonGraph if the following condition hold:
+     * (a)
      * (b) the queryGraph has an edge whose label can be replaced with a transducedLabel at cost k AND the transducedLabel is represented in the databaseGraph.
      * <p>
      * <p>
@@ -55,10 +59,6 @@ public class ProductAutomatonConstructor {
      * we do not simulate runs through the graphs yet. We simply add possible edges.
      * Later we check whether a path is valid. (i.e. first element is an initial state and last element is a final state)
      * This is the productAutomaton and does not represent a final solution!
-     * NOTE:
-     * we need an arbitrary transducer node for III (1),
-     * because we do not care about the transducer there however we still need a transducerNode for the ProductAutomatonNode.
-     * That's the reason for calling "addArbitraryTransducerNode".
      * <br/> --- <br/>
      * we portion the whole procedure into 3 main parts for clarity reasons.
      * <br/> --- <br/>
@@ -73,13 +73,11 @@ public class ProductAutomatonConstructor {
      * <br/> --- <br/>
      * part (III):
      * we check whether
-     * (1) the label              is present in the databaseGraph.
-     * -> Yes?: we add the following edge to the productAutomaton:
-     * (source) -[label/label/0]-> (target)
      * <p>
-     * (2) the "transduced" label is present in the databaseGraph. TODO: here we check (label \in alphabet_pos) or (label \in alphabet_neg)
-     *                                                             TODO: if (1) add positive edge (as we do at the moment)
-     *                                                             TODO: else if (2) add neg edge (from target to source with label (label should be negative)
+     * (2) the "transduced" label is present in the databaseGraph.
+     * TODO: here we check (label \in alphabet_pos) or (label \in alphabet_neg)
+     * TODO: if (1) add positive edge (as we do at the moment)
+     * TODO: else if (2) add neg edge (from target to source with label (label should be negative)
      * -> Yes?: we add the following edge to the productAutomaton:
      * (source) -[label/transducedLabel/cost]-> (target)
      * <br/> --- <br/>
@@ -104,7 +102,10 @@ public class ProductAutomatonConstructor {
     public void construct() {
         HashMap<String, ProductAutomatonNode> temporaryNodes = new HashMap<>();
         HashSet<TransducerEdge> fittingTransducerEdges = new HashSet<>();
-        HashSet<TransducerEdge> fittingEpsilonTransducerEdges = new HashSet<>();
+        Pair<ProductAutomatonNode, ProductAutomatonNode> pairOfNodes;
+        ProductAutomatonNode source;
+        ProductAutomatonNode target;
+
 
         //part (I)
         for (QueryNode queryNode : queryGraph.nodes) {
@@ -134,132 +135,58 @@ public class ProductAutomatonConstructor {
                     for (DatabaseEdge databaseEdge : databaseNode.edges) {
                         String localDatabaseLabel = databaseEdge.label;
 
-                        // TODO: delete this part (III (1)) and adjust the javadoc.
-                        // code cleanup: put this into the addEdge function.
-                        // (1)
-                        /*
-                        if (localQueryLabel.equals(localDatabaseLabel)) {
-                            // found a fitting (classical) edge!
-
-                            // we need the arbitrary transducer node now. TODO: replace "__" with "arbitrary"
-                            TransducerNode arbitraryTransducerNode = new TransducerNode("__", true, true);
-                            transducerGraph.addTransducerObjectNode(arbitraryTransducerNode);
-
-                            //create source and target nodes
-                            ProductAutomatonNode sourceNode1 = new ProductAutomatonNode(queryEdge.source, arbitraryTransducerNode, databaseEdge.source, queryEdge.source.isInitialState(), queryEdge.source.isFinalState());
-                            ProductAutomatonNode targetNode1 = new ProductAutomatonNode(queryEdge.target, arbitraryTransducerNode, databaseEdge.target, queryEdge.target.isInitialState(), queryEdge.target.isFinalState());
-
-                            // filter out potential duplicates
-                            // TODO: duplicates are created above but never used
-                            //  (only to get the identifier and find out that this identifier is already in use and we take the original instance instead of the duplicate instance)
-                            //  remove this issue for better performance
-                            //  (TODO: do this with the TODO below aswell!)
-                            if (temporaryNodes.containsKey(sourceNode1.getIdentifier())) {
-                                sourceNode1 = temporaryNodes.get(sourceNode1.getIdentifier());
-                            } else temporaryNodes.put(sourceNode1.getIdentifier(), sourceNode1);
-
-                            if (temporaryNodes.containsKey(targetNode1.getIdentifier())) {
-                                targetNode1 = temporaryNodes.get(targetNode1.getIdentifier());
-                            } else temporaryNodes.put(targetNode1.getIdentifier(), targetNode1);
-
-                            // add the edge to the productAutomaton
-                            productAutomatonGraph.addProductAutomatonEdge(sourceNode1, targetNode1, localQueryLabel, localQueryLabel, 0.0);
-                        }
-
-                         */
-
                         // (2)
                         // for all transducer edges that were found in part (II):
                         //      check whether
                         for (TransducerEdge transducerEdge : fittingTransducerEdges) {
 
-                            // part (IV)
-                            // (2) outgoing epsilon edges
-                            // condition: we read a String and replace that string with epsilon at cost k.
-                            // basically we move forward in the query and transducer but stay at the same place in the database.
-
+                            // filtering out special edges ... here: part (IV)-(1): outgoing epsilon edges
                             if (transducerEdge.outgoingString.isBlank()) {
-                                boolean sourceInitialState2 = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
-                                boolean sourceFinalState2 = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
 
-                                boolean targetInitialState2 = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
-                                boolean targetFinalState2 = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
-
-                                // create source and target nodes
-                                ProductAutomatonNode sourceNode4 = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.source, sourceInitialState2, sourceFinalState2);
-                                ProductAutomatonNode targetNode4 = new ProductAutomatonNode(queryEdge.target, transducerEdge.target, databaseEdge.source, targetInitialState2, targetFinalState2);
-
-                                if (temporaryNodes.containsKey(sourceNode4.getIdentifier())) {
-                                    sourceNode4 = temporaryNodes.get(sourceNode4.getIdentifier());
-
-                                } else temporaryNodes.put(sourceNode4.getIdentifier(), sourceNode4);
-
-                                if (temporaryNodes.containsKey(targetNode4.getIdentifier())) {
-                                    targetNode4 = temporaryNodes.get(targetNode4.getIdentifier());
-                                } else temporaryNodes.put(targetNode4.getIdentifier(), targetNode4);
-
+                                // construct the corresponding nodes for the edge
+                                pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.outgoingEpsilon);
+                                // receive said nodes
+                                source = pairOfNodes.getValue0();
+                                target = pairOfNodes.getValue1();
+                                // check for duplicates (if the node has already been created)
+                                source = getInstance(temporaryNodes, source);
+                                target = getInstance(temporaryNodes, target);
                                 // add the edge to the productAutomaton
-                                productAutomatonGraph.addProductAutomatonEdge(sourceNode4, targetNode4, localQueryLabel, "", transducerEdge.cost);
+                                productAutomatonGraph.addProductAutomatonEdge(source, target, localQueryLabel, "", transducerEdge.cost);
 
                             }
-
 
                             if (transducerEdge.outgoingString.equals(localDatabaseLabel)) {
                                 // found a fitting (transduced) edge!
 
-                                // part (IV)
-                                // (1) incoming epsilon edges
+                                // filtering out special edges ... here: part (IV) (1) incoming epsilon edges
                                 // condition: we are in a final query state, read epsilon and replace it with a String at cost k.
                                 if (transducerEdge.incomingString.isBlank()
                                         && queryNode.isFinalState()) {
-                                    // add edge
-                                    boolean sourceInitialState1 = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
-                                    boolean sourceFinalState1 = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
 
-                                    boolean targetInitialState1 = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
-                                    boolean targetFinalState1 = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
-
-                                    // create source and target nodes
-                                    ProductAutomatonNode sourceNode3 = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.source, sourceInitialState1, sourceFinalState1);
-                                    ProductAutomatonNode targetNode3 = new ProductAutomatonNode(queryEdge.source, transducerEdge.target, databaseEdge.target, targetInitialState1, targetFinalState1);
-
-                                    if (temporaryNodes.containsKey(sourceNode3.getIdentifier())) {
-                                        sourceNode3 = temporaryNodes.get(sourceNode3.getIdentifier());
-
-                                    } else temporaryNodes.put(sourceNode3.getIdentifier(), sourceNode3);
-
-                                    if (temporaryNodes.containsKey(targetNode3.getIdentifier())) {
-                                        targetNode3 = temporaryNodes.get(targetNode3.getIdentifier());
-                                    } else temporaryNodes.put(targetNode3.getIdentifier(), targetNode3);
-
+                                    // construct the corresponding nodes for the edge
+                                    pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.incomingEpsilon);
+                                    // receive said nodes
+                                    source = pairOfNodes.getValue0();
+                                    target = pairOfNodes.getValue1();
+                                    // check for duplicates (if the node has already been created)
+                                    source = getInstance(temporaryNodes, source);
+                                    target = getInstance(temporaryNodes, target);
                                     // add the edge to the productAutomaton
-                                    productAutomatonGraph.addProductAutomatonEdge(sourceNode3, targetNode3, "", localDatabaseLabel, transducerEdge.cost);
+                                    productAutomatonGraph.addProductAutomatonEdge(source, target, "", localDatabaseLabel, transducerEdge.cost);
                                 }
 
+                                // now we only have the approximated edges left (we've so far filtered out outgoing and incoming epsilon edges)
+                                pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.approximated);
+                                source = pairOfNodes.getValue0();
+                                target = pairOfNodes.getValue1();
 
-                                // create booleans for initial and final states. (check query and transducer only since database always is initial and final)
-                                boolean sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
-                                boolean sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
-
-                                boolean targetInitialState = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
-                                boolean targetFinalState = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
-
-                                // create source and target nodes
-                                ProductAutomatonNode sourceNode2 = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.source, sourceInitialState, sourceFinalState);
-                                ProductAutomatonNode targetNode2 = new ProductAutomatonNode(queryEdge.target, transducerEdge.target, databaseEdge.target, targetInitialState, targetFinalState);
-
-                                // filter out potential duplicates TODO: do this with getInstance()
-                                if (temporaryNodes.containsKey(sourceNode2.getIdentifier())) {
-                                    sourceNode2 = temporaryNodes.get(sourceNode2.getIdentifier());
-
-                                } else temporaryNodes.put(sourceNode2.getIdentifier(), sourceNode2);
-
-                                if (temporaryNodes.containsKey(targetNode2.getIdentifier())) {
-                                    targetNode2 = temporaryNodes.get(targetNode2.getIdentifier());
-                                } else temporaryNodes.put(targetNode2.getIdentifier(), targetNode2);
+                                // check for duplicates (if the node has already been created))
+                                source = getInstance(temporaryNodes, source);
+                                target = getInstance(temporaryNodes, target);
 
                                 // add the edge to the productAutomaton
-                                productAutomatonGraph.addProductAutomatonEdge(sourceNode2, targetNode2, localQueryLabel, localDatabaseLabel, transducerEdge.cost);
+                                productAutomatonGraph.addProductAutomatonEdge(source, target, localQueryLabel, localDatabaseLabel, transducerEdge.cost);
                             }
                         }
                     }
@@ -268,43 +195,129 @@ public class ProductAutomatonConstructor {
         }
     }
 
-    // TODO: use this function to addEdges instead of duplicate code above!!
-    private void addEdge(QueryEdge queryEdge, TransducerEdge transducerEdge, DatabaseEdge databaseEdge, String edgeType) {
+    /**
+     * helper function that builds us the ProductAutomatonNodes needed to create new edges.
+     * @param queryEdge the respective queryEdge
+     * @param transducerEdge the respective transducerEdge
+     * @param databaseEdge the respective databaseEdge
+     * @param edgeType the edgeType that needs to be created.
+     * @return a Pair of ProductAutomatonNodes, containing the source node (value_0) and the target node (value_1)
+     */
+    private Pair<ProductAutomatonNode, ProductAutomatonNode> constructAutomatonNode(QueryEdge queryEdge, TransducerEdge transducerEdge, DatabaseEdge databaseEdge, EdgeType edgeType) {
 
         boolean sourceInitialState;
         boolean sourceFinalState;
         boolean targetInitialState;
         boolean targetFinalState;
-
-        String queryLabel = queryEdge.label;
-        String databaseLabel = databaseEdge.label;
-
-        String incomingTransducerLabel = transducerEdge.incomingString;
-        String outgoingTransducerLabel = transducerEdge.outgoingString;
+        Pair<ProductAutomatonNode, ProductAutomatonNode> resultPairOfNodes;
 
         ProductAutomatonNode sourceNode;
         ProductAutomatonNode targetNode;
 
-        Double cost;
-
-        // set some values depending on the type of the edge...
+        /**
+         * last modified: 2021_03_16
+         * TODO: this is a nice explanation, however it does not fit here. we just create automaton nodes here! (not the edges..)
+         * Currently we support 2RPQs. We have 6 different edge types that can appear.
+         * Below you can see when they arise (i) and how we handle them (ii).
+         * <br/> --- <br/>
+         * <br/> --- <br/>
+         * (1) incoming epsilon.
+         * (i) our query is in a final state and the transducer allows to read epsilon and replace it with some string.
+         * (ii) query stays in the same state, transducer moves, database moves.
+         * <br/> --- <br/>
+         * (2) outgoing epsilon.
+         * (i) can arise everywhere. We read some String and the transducer allows the deletion of said String at cost k.
+         * (ii) query moves, transducer moves, database stays in the same state.
+         * <br/> --- <br/>
+         * (3) approximated.
+         * (i) can arise everywhere. We read some String and the transducer then changes this String to some other String (incl. duplicates)
+         * (ii) query moves, transducer moves, database moves.
+         * <br/> --- <br/>
+         *  *** Now for the inverse variants of these edge types
+         * <br/> --- <br/>
+         * (4) inverse incoming epsilon.
+         * (i) same as (1) (i) - note that we read an inverse label (outgoing transducer).
+         * (ii) query stays in the same state, transducer moves, database moves backwards
+         * <br/> --- <br/>
+         * (5) inverse outgoing epsilon.
+         * (i) same as (2) (i) - note that we read an inverse label (incoming transducer).
+         * (ii) query moves, transducer moves, database stays in the same state.
+         * <br/> --- <br/>
+         * (6) inverse approximated.
+         * (i) same as (3) (i) - note that we read an inverse label (outgoing transducer).
+         *
+         */
         switch (edgeType) {
-            case "classical":
-                // do something ...
+            case incomingEpsilon:
+
+                sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
+                sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
+
+                targetInitialState = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
+                targetFinalState = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
+
+                sourceNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.source, sourceInitialState, sourceFinalState);
+                targetNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.target, databaseEdge.target, targetInitialState, targetFinalState);
+
                 break;
-            case "approximated":
-                // do something ...
+            case outgoingEpsilon:
+                // condition: we read a String and replace that string with epsilon at cost k.
+                // basically we move forward in the query and transducer but stay at the same place in the database.
+
+                sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
+                sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
+
+                targetInitialState = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
+                targetFinalState = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
+
+                sourceNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.source, sourceInitialState, sourceFinalState);
+                targetNode = new ProductAutomatonNode(queryEdge.target, transducerEdge.target, databaseEdge.source, targetInitialState, targetFinalState);
+
                 break;
-            case "incomingEpsilon":
-                // do something ...
+            case approximated:
+
+                sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
+                sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
+
+                targetInitialState = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
+                targetFinalState = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
+
+                sourceNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.source, sourceInitialState, sourceFinalState);
+                targetNode = new ProductAutomatonNode(queryEdge.target, transducerEdge.target, databaseEdge.target, targetInitialState, targetFinalState);
+
                 break;
-            case "outgoingEpsilon":
+            /* case negatedIncomingEpsilon:
                 // do something
                 break;
+             case negatedOutgoingEpsilon:
+                // ...
+                break;
+             case negatedApproximated:
+                // ...
+                break; */
+            default:
+                throw new IllegalStateException("Unexpected value: " + edgeType);
         }
+        resultPairOfNodes = new Pair<>(sourceNode, targetNode);
 
-        // create source and target nodes if they are not already there (duplicate check!)
-        // call productAutomatonGraph.addProductAutomatonEdge(sourceNode, targetNode, queryLabel, databaseLabel, cost);
+        return resultPairOfNodes;
 
+    }
+
+    /**
+     * this method checks for possible duplicates.
+     *
+     * @param nodeMap the map containing all the nodes.
+     * @param node    the concrete node we want to test
+     * @return node, part of the nodeMap. (either retrieved from there or newly created and added)
+     */
+    private ProductAutomatonNode getInstance(HashMap<String, ProductAutomatonNode> nodeMap, ProductAutomatonNode node) {
+
+        if (nodeMap.containsKey(node.getIdentifier())) {
+            node = nodeMap.get(node.getIdentifier());
+
+        } else nodeMap.put(node.getIdentifier(), node);
+
+        return node;
     }
 }

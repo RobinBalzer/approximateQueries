@@ -132,7 +132,7 @@ public class StatsTracker {
             e.printStackTrace();
         }
 
-        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", true));
+        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", false));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
         System.out.println("the product automaton graph for this computation: \n");
