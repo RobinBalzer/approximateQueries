@@ -28,7 +28,7 @@ public class StatsTracker {
         this.answerMap = new HashMap<>();
     }
 
-    public StatsTracker(DataProvider dataProvider, int topK) throws FileNotFoundException {
+    public StatsTracker(DataProvider dataProvider, int topK) {
         this.queryGraph = dataProvider.getQueryGraph();
         this.transducerGraph = dataProvider.getTransducerGraph();
         this.databaseGraph = dataProvider.getDatabaseGraph();
@@ -43,7 +43,7 @@ public class StatsTracker {
 
     public void runDijkstraComplete() throws FileNotFoundException {
 
-        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", false));
+        PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", false));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
 
@@ -61,7 +61,7 @@ public class StatsTracker {
 
         System.setOut(stdout);
 
-         productAutomatonConstructor.construct();
+        productAutomatonConstructor.construct();
 
 
         // start of the computation
@@ -121,7 +121,7 @@ public class StatsTracker {
 
     private void writeToFile() throws FileNotFoundException {
 
-        File queryAnswers = new File ("src/main/resources/output/queryResults.txt");
+        File queryAnswers = new File("src/main/resources/output/queryResults.txt");
         FileWriter out;
         int count = 0;
         try {
@@ -149,7 +149,7 @@ public class StatsTracker {
             e.printStackTrace();
         }
 
-        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", true));
+        PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", true));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
         System.out.println("product automaton: ");
