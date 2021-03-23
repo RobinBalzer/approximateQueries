@@ -20,7 +20,20 @@ public class TransducerEdge {
     }
 
     public String toString() {
-        return String.format("(%s) -[%s|%s|%s]-> (%s)", source.identifier, incomingString, outgoingString, cost, target.identifier);
+
+        String eps = "ε";
+        String incoming;
+        String outgoing;
+
+        if (incomingString.isEmpty()){
+            incoming = eps;
+        } else incoming = incomingString;
+
+        if (outgoingString.isEmpty()){
+            outgoing = eps;
+        } else outgoing = outgoingString;
+
+        return String.format("(%s) -[%3s|%3s|%3s]-> (%s)", source.identifier, incoming, outgoing, cost, target.identifier);
     }
 
     public void print() {

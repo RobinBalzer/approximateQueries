@@ -143,6 +143,23 @@ public class ProductAutomatonConstructor {
                             // filtering out special edges ... here: part (IV)-(1): outgoing epsilon edges
                             if (transducerEdge.outgoingString.isBlank()) {
 
+                                // (case 5) negated outgoing epsilon edge
+                                if (isNegated(localQueryLabel)) {
+
+                                    // construct the corresponding nodes for the edge
+                                    pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.negatedOutgoingEpsilon);
+                                    // receive said nodes
+                                    source = pairOfNodes.getValue0();
+                                    target = pairOfNodes.getValue1();
+                                    // check for duplicates
+                                    source = getInstance(temporaryNodes, source);
+                                    target = getInstance(temporaryNodes, target);
+                                    // add the edge to the productAutomaton
+                                    productAutomatonGraph.addProductAutomatonEdge(source, target, negateString(localQueryLabel), "", transducerEdge.cost);
+
+
+                                }
+
                                 // construct the corresponding nodes for the edge
                                 pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.outgoingEpsilon);
                                 // receive said nodes
@@ -164,6 +181,21 @@ public class ProductAutomatonConstructor {
                                 if (transducerEdge.incomingString.isBlank()
                                         && queryNode.isFinalState()) {
 
+                                    // (case 4) negated incoming epsilon edge
+                                    if (isNegated(transducerEdge.outgoingString)) {
+
+                                        // construct the corresponding nodes for the edge
+                                        pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.negatedIncomingEpsilon);
+                                        // receive said nodes
+                                        source = pairOfNodes.getValue0();
+                                        target = pairOfNodes.getValue1();
+                                        // check for duplicates
+                                        source = getInstance(temporaryNodes, source);
+                                        target = getInstance(temporaryNodes, target);
+                                        // add the edge to the productAutomaton
+                                        productAutomatonGraph.addProductAutomatonEdge(source, target, "", negateString(localDatabaseLabel), transducerEdge.cost);
+                                    }
+
                                     // construct the corresponding nodes for the edge
                                     pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.incomingEpsilon);
                                     // receive said nodes
@@ -176,7 +208,26 @@ public class ProductAutomatonConstructor {
                                     productAutomatonGraph.addProductAutomatonEdge(source, target, "", localDatabaseLabel, transducerEdge.cost);
                                 }
 
-                                // now we only have the approximated edges left (we've so far filtered out outgoing and incoming epsilon edges)
+                                // now we only have the approximated edges left (we've so far filtered out outgoing and incoming epsilon edges incl. their negatives)
+
+                                // first check for negation again...
+
+                                // (case 6) negated approximated edge
+                                if (isNegated(transducerEdge.outgoingString)) {
+
+                                    // construct the corresponding nodes for the edge
+                                    pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.incomingEpsilon);
+                                    // receive said nodes
+                                    source = pairOfNodes.getValue0();
+                                    target = pairOfNodes.getValue1();
+                                    // check for duplicates (if the node has already been created)
+                                    source = getInstance(temporaryNodes, source);
+                                    target = getInstance(temporaryNodes, target);
+                                    // add the edge to the productAutomaton
+                                    // (case 6.1 vs case 6.2) here: don't care for positive or negative localQueryLabel. it gets taken as it comes.
+                                    productAutomatonGraph.addProductAutomatonEdge(source, target, localQueryLabel, negateString(localDatabaseLabel), transducerEdge.cost);
+
+                                }
                                 pairOfNodes = constructAutomatonNode(queryEdge, transducerEdge, databaseEdge, EdgeType.approximated);
                                 source = pairOfNodes.getValue0();
                                 target = pairOfNodes.getValue1();
@@ -197,10 +248,11 @@ public class ProductAutomatonConstructor {
 
     /**
      * helper function that builds us the ProductAutomatonNodes needed to create new edges.
-     * @param queryEdge the respective queryEdge
+     *
+     * @param queryEdge      the respective queryEdge
      * @param transducerEdge the respective transducerEdge
-     * @param databaseEdge the respective databaseEdge
-     * @param edgeType the edgeType that needs to be created.
+     * @param databaseEdge   the respective databaseEdge
+     * @param edgeType       the edgeType that needs to be created.
      * @return a Pair of ProductAutomatonNodes, containing the source node (value_0) and the target node (value_1)
      */
     private Pair<ProductAutomatonNode, ProductAutomatonNode> constructAutomatonNode(QueryEdge queryEdge, TransducerEdge transducerEdge, DatabaseEdge databaseEdge, EdgeType edgeType) {
@@ -249,7 +301,7 @@ public class ProductAutomatonConstructor {
          */
         switch (edgeType) {
             case incomingEpsilon:
-
+                // called by case 1
                 sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
                 sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
 
@@ -261,6 +313,7 @@ public class ProductAutomatonConstructor {
 
                 break;
             case outgoingEpsilon:
+                // called by case 2
                 // condition: we read a String and replace that string with epsilon at cost k.
                 // basically we move forward in the query and transducer but stay at the same place in the database.
 
@@ -275,7 +328,7 @@ public class ProductAutomatonConstructor {
 
                 break;
             case approximated:
-
+                // called by case 3
                 sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
                 sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
 
@@ -286,15 +339,41 @@ public class ProductAutomatonConstructor {
                 targetNode = new ProductAutomatonNode(queryEdge.target, transducerEdge.target, databaseEdge.target, targetInitialState, targetFinalState);
 
                 break;
-            /* case negatedIncomingEpsilon:
-                // do something
+            case negatedIncomingEpsilon:
+                // called by case 4
+                sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
+                sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
+
+                targetInitialState = (queryEdge.source.isInitialState() && transducerEdge.target.isInitialState());
+                targetFinalState = (queryEdge.source.isFinalState() && transducerEdge.target.isFinalState());
+
+                sourceNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.target, sourceInitialState, sourceFinalState);
+                targetNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.target, databaseEdge.source, targetInitialState, targetFinalState);
+
                 break;
-             case negatedOutgoingEpsilon:
-                // ...
+            case negatedOutgoingEpsilon:
+                // called by case 5 (todo: merge this with outgoingEpsilon -> same code but it might arise confusion)
+                sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
+                sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
+
+                targetInitialState = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
+                targetFinalState = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
+
+                sourceNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.source, sourceInitialState, sourceFinalState);
+                targetNode = new ProductAutomatonNode(queryEdge.target, transducerEdge.target, databaseEdge.source, targetInitialState, targetFinalState);
+
                 break;
-             case negatedApproximated:
-                // ...
-                break; */
+            case negatedApproximated:
+                // called by case 6
+                sourceInitialState = (queryEdge.source.isInitialState() && transducerEdge.source.isInitialState());
+                sourceFinalState = (queryEdge.source.isFinalState() && transducerEdge.source.isFinalState());
+
+                targetInitialState = (queryEdge.target.isInitialState() && transducerEdge.target.isInitialState());
+                targetFinalState = (queryEdge.target.isFinalState() && transducerEdge.target.isFinalState());
+
+                sourceNode = new ProductAutomatonNode(queryEdge.source, transducerEdge.source, databaseEdge.target, sourceInitialState, sourceFinalState);
+                targetNode = new ProductAutomatonNode(queryEdge.target, transducerEdge.target, databaseEdge.source, targetInitialState, targetFinalState);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + edgeType);
         }
@@ -319,5 +398,17 @@ public class ProductAutomatonConstructor {
         } else nodeMap.put(node.getIdentifier(), node);
 
         return node;
+    }
+
+    // returns if the string starts with a negation
+    private boolean isNegated(String string) {
+        return string.charAt(0) == '-';
+    }
+
+    // returns a negated string
+    private String negateString(String string) {
+        StringBuilder sb = new StringBuilder(string);
+        sb.insert(0, '-');
+        return sb.toString();
     }
 }

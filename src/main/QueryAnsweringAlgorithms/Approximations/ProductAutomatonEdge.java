@@ -27,9 +27,22 @@ public class ProductAutomatonEdge {
     }
 
     public String toString() {
-        return String.format("(%s, %s, %s) -[%s, %s, %s]-> (%s, %s, %s)",
+
+        String eps = "ε";
+        String incoming;
+        String outgoing;
+
+        if (incomingString.isEmpty()){
+            incoming = eps;
+        } else incoming = incomingString;
+
+        if (outgoingString.isEmpty()){
+            outgoing = eps;
+        } else outgoing = outgoingString;
+
+        return String.format("(%s, %s, %s) -[%3s, %3s, %3s]-> (%s, %s, %s)",
                 source.identifier.getValue0().identifier, source.identifier.getValue1().identifier, source.identifier.getValue2().identifier,
-                incomingString, outgoingString, cost,
+                incoming, outgoing, cost,
                 target.identifier.getValue0().identifier, target.identifier.getValue1().identifier, target.identifier.getValue2().identifier
         );
     }

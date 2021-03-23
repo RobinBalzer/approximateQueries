@@ -17,7 +17,15 @@ public class QueryEdge {
     }
 
     public String toString() {
-        return String.format("(%s) -[%s]-> (%s)", source.identifier, label, target.identifier);
+
+        String eps = "ε";
+        String incoming;
+
+        if (label.isEmpty()){
+            incoming = eps;
+        } else incoming = label;
+
+        return String.format("(%s) -[%3s]-> (%s)", source.identifier, incoming, target.identifier);
     }
 
     public void print() {

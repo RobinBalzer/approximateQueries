@@ -28,7 +28,7 @@ public class StatsTracker {
         this.answerMap = new HashMap<>();
     }
 
-    public StatsTracker(DataProvider dataProvider, int topK){
+    public StatsTracker(DataProvider dataProvider, int topK) throws FileNotFoundException {
         this.queryGraph = dataProvider.getQueryGraph();
         this.transducerGraph = dataProvider.getTransducerGraph();
         this.databaseGraph = dataProvider.getDatabaseGraph();
@@ -39,10 +39,27 @@ public class StatsTracker {
         this.productAutomatonReachabilityAnalysis = new ProductAutomatonReachabilityAnalysis(productAutomatonConstructor, topK);
         this.answerMap = new HashMap<>();
 
-
     }
 
     public void runDijkstraComplete() throws FileNotFoundException {
+
+        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", false));
+        PrintStream stdout = System.out;
+        System.setOut(fileStream);
+
+        System.out.println("query graph: ");
+        queryGraph.printGraph();
+        System.out.println("---");
+
+        System.out.println("transducer graph: ");
+        transducerGraph.printGraph();
+        System.out.println("---");
+
+        System.out.println("database graph: ");
+        databaseGraph.printGraph();
+        System.out.println("---");
+
+        System.setOut(stdout);
 
          productAutomatonConstructor.construct();
 
@@ -132,13 +149,11 @@ public class StatsTracker {
             e.printStackTrace();
         }
 
-        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", false));
+        PrintStream fileStream = new PrintStream( new FileOutputStream("src/main/resources/output/graphs.txt", true));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
-        System.out.println("the product automaton graph for this computation: \n");
+        System.out.println("product automaton: ");
         productAutomatonConstructor.productAutomatonGraph.printGraph();
-        System.out.println();
-        System.out.println("note that '' (emptyString) means we read/write an epsilon. \n");
         System.setOut(stdout);
     }
 
