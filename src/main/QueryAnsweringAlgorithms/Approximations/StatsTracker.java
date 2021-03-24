@@ -61,8 +61,14 @@ public class StatsTracker {
 
         System.setOut(stdout);
 
+        long startCombinedComputation = System.currentTimeMillis();
+
+        // start of preprocessing
+        long startPreprocessing = System.currentTimeMillis();
+
         productAutomatonConstructor.construct();
 
+        long elapsedTimeMillisPreprocessing = System.currentTimeMillis() - startPreprocessing;
 
         // start of the computation
         long start = System.currentTimeMillis();
@@ -72,20 +78,29 @@ public class StatsTracker {
         // Get elapsed time in milliseconds
         long elapsedTimeMillis = System.currentTimeMillis() - start;
 
-        // Get elapsed time in seconds
-        float elapsedTimeSec = elapsedTimeMillis / 1000F;
+        long elapsedTimeTotalMillis = System.currentTimeMillis() - startCombinedComputation;
 
-        // Get elapsed time in minutes
-        float elapsedTimeMin = elapsedTimeMillis / (60 * 1000F);
-
-        writeTimeToFile(elapsedTimeMillis, elapsedTimeSec, elapsedTimeMin);
+        writeTimeToFile(elapsedTimeMillis, elapsedTimeMillisPreprocessing, elapsedTimeTotalMillis);
 
         printEndResult();
     }
 
-    private void writeTimeToFile(long milli, float sec, float min) {
+    private void writeTimeToFile(long milli, long milliPreprocessing, long milliTotal) {
         File stats = new File("src/main/resources/output/computationStats.txt");
         FileWriter out;
+
+
+        float compTimeMillisPreprocessing = milliPreprocessing;
+        float compTimeSecPreprocessing = milliPreprocessing / 1000F;
+        float compTimeMinPreprocessing = milliPreprocessing / (60 * 1000F);
+
+        float compTimeMillis = milli;
+        float compTimeSec = milli / 1000F;
+        float compTimeMin = milli / (60 * 1000F);
+
+        float compTimeMillisTotal = milliTotal;
+        float compTimeSecTotal = milli / 1000F;
+        float compTimeMinTotal = milli / (60 * 1000F);
 
         try {
             int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
@@ -94,11 +109,27 @@ public class StatsTracker {
             out.write("amount of actual nodes in the product automaton: " + amountOfNodes + ". \n");
             out.write("note that we used the lazy construction. \n ");
             out.write("\n");
-            out.write("some stats for the dijkstra processing time. \n");
-            out.write("computation time in milliseconds: " + milli + ". \n");
-            out.write("computation time in seconds: " + sec + ". \n");
-            // out.write("computation time in minutes: " + min + ". \n");
+            out.write("some computation time stats. \n");
+            out.write("(1) preprocessing (productAutomaton construction \n");
+            out.write("   time needed (milliseconds): " + compTimeMillisPreprocessing + " \n");
+            out.write("   time needed (seconds): " + compTimeSecPreprocessing + " \n");
 
+            if (compTimeSecPreprocessing > 60.0) {
+                out.write("   time needed (minutes): " + compTimeMinPreprocessing + " \n");
+            }
+
+            out.write("(2) dijkstra processing \n");
+            out.write("   time needed (milliseconds): " + compTimeMillis + " \n");
+            out.write("   time needed (seconds): " + compTimeSec + " \n");
+            if (compTimeSec > 60.0) {
+                out.write("   time needed (minutes): " + compTimeMin + " \n");
+            }
+            out.write("(3) combined (preprocessing and dijkstra) \n");
+            out.write("   time needed (milliseconds): " + compTimeMillisTotal + " \n");
+            out.write("   time needed (seconds): " + compTimeSecTotal + " \n");
+            if (compTimeSecTotal > 60.0) {
+                out.write("   time needed (minutes): " + compTimeMinTotal + " \n");
+            }
 
             out.close();
 
