@@ -44,7 +44,7 @@ public class DataReader {
 
                 // start with finding out about the name of the data set
                 if (st.contains("name:")) {
-                   // System.out.println("Found 'name:' ");
+                    // System.out.println("Found 'name:' ");
                     words = st.split("name: ");
                     dataProvider.setDataSetIdentifier(words[1].trim());
                     st = br.readLine();
@@ -52,7 +52,7 @@ public class DataReader {
 
                 // read all the data for the queryGraph...
                 if (st.contains("queryGraph:")) {
-                   // System.out.println("Found 'queryGraph:' ");
+                    // System.out.println("Found 'queryGraph:' ");
                     ArrayList<String> queryGraphData = new ArrayList<>();
                     amountOfNodes = 0;
                     st = br.readLine();
@@ -274,14 +274,13 @@ public class DataReader {
 
     /**
      * auto-generation of a transducer. this transducer will only preserve classical answers.
-     * design choice: only one source and target node with n edges between them (alphabet size = n)
-     * other variation could be: having n source and target nodes with only one edge between them.
-     * other variation could be: having one node (initial and final) and n self-loops (alphabet size = n)
+     * idea: having one node (initial and final) and n self-loops (alphabet size = n)
+     * We need this style since otherwise we don't get classical answers of size > 1.
+     * (or we have to make every node initial and final...)
      */
     private void createTransducerPreservingClassicalAnswers() {
 
-        TransducerNode source = new TransducerNode("s0", true, false);
-        TransducerNode target = new TransducerNode("s1", false, true);
+        TransducerNode source = new TransducerNode("t0", true, true);
         String word; // working String
         String incoming;
         String outgoing;
@@ -292,10 +291,10 @@ public class DataReader {
             incoming = word;
             outgoing = word;
 
-            dataProvider.transducerGraph.addTransducerObjectEdge(source, target, incoming, outgoing, cost);
+            dataProvider.transducerGraph.addTransducerObjectEdge(source, source, incoming, outgoing, cost);
         }
 
-        amountOfNodesMap.put("transducer", 2);
+        amountOfNodesMap.put("transducer", 1);
 
     }
 
