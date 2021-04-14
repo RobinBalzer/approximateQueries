@@ -1,5 +1,7 @@
-package Approximations;
+package StatsTrackers;
 
+import Algorithms.DijkstraClassic;
+import ProductAutomatonSpecification.ProductAutomatonConstructor;
 import DataProvider.DataProvider;
 import Database.DatabaseGraph;
 import Query.QueryGraph;
@@ -9,39 +11,28 @@ import org.javatuples.Pair;
 import java.io.*;
 import java.util.HashMap;
 
-public class StatsTracker {
+public class StatsTrackerClassic implements StatsTracker {
     QueryGraph queryGraph;
     TransducerGraph transducerGraph;
     DatabaseGraph databaseGraph;
     ProductAutomatonConstructor productAutomatonConstructor;
-    ProductAutomatonReachabilityAnalysis productAutomatonReachabilityAnalysis;
     HashMap<Pair<String, String>, Double> answerMap;
-    int topK;
 
-    public StatsTracker(DataProvider dataProvider) {
+    DijkstraClassic dijkstraClassic;
+
+    public StatsTrackerClassic(DataProvider dataProvider) {
         this.queryGraph = dataProvider.getQueryGraph();
         this.transducerGraph = dataProvider.getTransducerGraph();
         this.databaseGraph = dataProvider.getDatabaseGraph();
 
         this.productAutomatonConstructor = new ProductAutomatonConstructor(queryGraph, transducerGraph, databaseGraph);
-        this.productAutomatonReachabilityAnalysis = new ProductAutomatonReachabilityAnalysis(productAutomatonConstructor);
+        this.dijkstraClassic = new DijkstraClassic(productAutomatonConstructor);
         this.answerMap = new HashMap<>();
     }
 
-    public StatsTracker(DataProvider dataProvider, int topK) {
-        this.queryGraph = dataProvider.getQueryGraph();
-        this.transducerGraph = dataProvider.getTransducerGraph();
-        this.databaseGraph = dataProvider.getDatabaseGraph();
 
-        this.topK = topK;
-
-        this.productAutomatonConstructor = new ProductAutomatonConstructor(queryGraph, transducerGraph, databaseGraph);
-        this.productAutomatonReachabilityAnalysis = new ProductAutomatonReachabilityAnalysis(productAutomatonConstructor, topK);
-        this.answerMap = new HashMap<>();
-
-    }
-
-    public void runDijkstraComplete() throws FileNotFoundException {
+    @Override
+    public void runDijkstra() throws FileNotFoundException {
 
         PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", false));
         PrintStream stdout = System.out;
@@ -73,7 +64,7 @@ public class StatsTracker {
         // start of the computation
         long start = System.currentTimeMillis();
 
-        answerMap = productAutomatonReachabilityAnalysis.processDijkstraOverAllInitialNodes();
+        answerMap = dijkstraClassic.processDijkstraOverAllInitialNodes();
 
         // Get elapsed time in milliseconds
         long elapsedTimeMillis = System.currentTimeMillis() - start;
@@ -85,7 +76,8 @@ public class StatsTracker {
         printEndResult();
     }
 
-    private void writeTimeToFile(long milli, long milliPreprocessing, long milliTotal) {
+    @Override
+    public void writeTimeToFile(long milli, long milliPreprocessing, long milliTotal) {
         File stats = new File("src/main/resources/output/computationStats.txt");
         FileWriter out;
 
@@ -138,9 +130,10 @@ public class StatsTracker {
         }
     }
 
-    private void printEndResult() throws FileNotFoundException {
+    @Override
+    public void printEndResult() throws FileNotFoundException {
 
-        writeToFile();
+        writeResultToFile();
 
         System.out.println("------------------");
         System.out.println("end result: ");
@@ -150,7 +143,8 @@ public class StatsTracker {
         System.out.println("computation completed.");
     }
 
-    private void writeToFile() throws FileNotFoundException {
+    @Override
+    public void writeResultToFile() throws FileNotFoundException {
 
         File queryAnswers = new File("src/main/resources/output/queryResults.txt");
         FileWriter out;

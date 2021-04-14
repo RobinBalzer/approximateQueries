@@ -1,29 +1,33 @@
-import Approximations.ProductAutomatonConstructor;
-import Approximations.ProductAutomatonReachabilityAnalysis;
-import Approximations.StatsTracker;
+import StatsTrackers.StatsTrackerClassic;
+import StatsTrackers.StatsTrackerThreshold;
+import StatsTrackers.StatsTrackerTopK;
 import DataProvider.DataProvider;
-import Database.DatabaseGraph;
-import Query.QueryGraph;
-import Transducer.TransducerGraph;
 
 import java.io.FileNotFoundException;
 
 public class SearchHandler {
-    private StatsTracker statsTracker;
+    private StatsTrackerClassic statsTrackerClassic;
+    private StatsTrackerThreshold statsTrackerThreshold;
+    private StatsTrackerTopK statsTrackerTopK;
 
     public SearchHandler(DataProvider dataProvider) {
 
     }
 
     public void searchAllAnswers(DataProvider dataProvider) throws FileNotFoundException {
-        this.statsTracker = new StatsTracker(dataProvider);
-        statsTracker.runDijkstraComplete();
+        this.statsTrackerClassic = new StatsTrackerClassic(dataProvider);
+        statsTrackerClassic.runDijkstra();
     }
 
     public void searchTopKAnswers(DataProvider dataProvider, int k) throws FileNotFoundException {
-        this.statsTracker = new StatsTracker(dataProvider, k);
-        statsTracker.runDijkstraComplete();
+        this.statsTrackerTopK = new StatsTrackerTopK(dataProvider, k);
+        statsTrackerTopK.runDijkstra();
 
+    }
+
+    public void searchThresholdAnswers(DataProvider dataProvider, Double threshold) throws FileNotFoundException {
+        this.statsTrackerThreshold = new StatsTrackerThreshold(dataProvider, threshold);
+        statsTrackerThreshold.runDijkstra();
     }
 
 }

@@ -1,5 +1,6 @@
-package Approximations;
+package ProductAutomatonSpecification;
 
+import Algorithms.EdgeType;
 import DataProvider.DataProvider;
 import Database.DatabaseEdge;
 import Database.DatabaseGraph;
@@ -26,7 +27,7 @@ public class ProductAutomatonConstructor {
     DatabaseGraph databaseGraph;
     EdgeType edgeType;
 
-    ProductAutomatonGraph productAutomatonGraph;
+    public ProductAutomatonGraph productAutomatonGraph;
 
 
     /**

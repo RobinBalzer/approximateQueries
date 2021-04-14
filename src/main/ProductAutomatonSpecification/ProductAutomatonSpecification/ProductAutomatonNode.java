@@ -1,4 +1,4 @@
-package Approximations;
+package ProductAutomatonSpecification;
 
 import Database.DatabaseNode;
 import Query.QueryNode;
@@ -9,10 +9,10 @@ import java.util.LinkedList;
 
 public class ProductAutomatonNode implements Comparable<ProductAutomatonNode> {
 
-    Triplet<QueryNode, TransducerNode, DatabaseNode> identifier;
-    boolean initialState;
-    boolean finalState;
-    Double weight;
+    public Triplet<QueryNode, TransducerNode, DatabaseNode> identifier;
+    public boolean initialState;
+    public boolean finalState;
+    public Double weight;
     public LinkedList<ProductAutomatonEdge> edges;
 
     public ProductAutomatonNode() {

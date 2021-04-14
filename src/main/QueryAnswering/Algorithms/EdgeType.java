@@ -1,4 +1,4 @@
-package Approximations;
+package Algorithms;
 
 
 public enum EdgeType {

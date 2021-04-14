@@ -1,4 +1,4 @@
-package Approximations;
+package ProductAutomatonSpecification;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,19 +1,19 @@
-package Approximations;
+package ProductAutomatonSpecification;
 
 public class ProductAutomatonEdge {
 
-    ProductAutomatonNode source;
-    ProductAutomatonNode target;
-    String incomingString;
-    String outgoingString;
-    double cost;
+    public ProductAutomatonNode source;
+    public  ProductAutomatonNode target;
+    public String incomingString;
+    public String outgoingString;
+    public double cost;
 
     /**
      * ProductAutomatonEdges here have the following form
      * (source) -[incomingString/outgoingString/cost]-> (target)
      *
-     * @param source         the source node (a ProductAutomatonNode)
-     * @param target         the target node (a ProductAutomatonNode)
+     * @param source         the source node (a ProductAutomatonSpecification.ProductAutomatonNode)
+     * @param target         the target node (a ProductAutomatonSpecification.ProductAutomatonNode)
      * @param incomingString the string we (as a transducer) read
      * @param outgoingString the string we (as a transducer) return as a replacement
      * @param cost           the cost of the replacement

@@ -24,22 +24,18 @@ public class main {
         SearchHandler searchHandler;
         Scanner scanner = new Scanner(System.in);
 
+        userChoiceFileInput = userInputData(scanner);
+        userChoiceTransducerMode = userInputTransducer(scanner);
+        userChoiceComputationMode = userInputComputation(scanner);
 
-        // receive the file name we want to compute
-        System.out.println("Enter the file name you want to process (has to be stored in src/main/resources/input/): ");
-        userChoiceFileInput = scanner.next();
 
-        // receive the transducer mode that is used
-        System.out.println("Do you provide a transducer yourself or do you want to generate a transducer?");
-        System.out.println("NOTE: If you choose to generate a transducer automatically it will \n (1) only preserve classical answers and \n (2) override your provided transducer");
-        System.out.println("provide transducer yourself (y) or generate a transducer (n): ");
-        userChoiceTransducerMode = scanner.next();
-
-        if (userChoiceTransducerMode.matches("yes|y|si")) {
+        if (userChoiceTransducerMode.equals("provided")) {
             dataReader = new DataReader(userChoiceFileInput, false);
 
-        } else {
+        } else if (userChoiceTransducerMode.equals("generate")) {
             dataReader = new DataReader(userChoiceFileInput, true);
+        } else { // error ...
+            return;
         }
 
         searchHandler = new SearchHandler(dataReader.getDataProvider());
@@ -49,18 +45,17 @@ public class main {
         // testing if the parsing was successful and correct -> check "parsedInputData.txt"
         dataReader.printData();
 
-        // receive the mode of the search
-        System.out.println("Select the mode you want to start the application! \n (1) a complete search \n (2) a top k search (currently not working; 2021_03_16)" );
-        System.out.print("Enter 1 or 2: ");
-        userChoiceComputationMode = scanner.next();
 
         DataProvider dataProvider = dataReader.getDataProvider();
         switch (userChoiceComputationMode) {
-            case "1":
+            case "classic":
                 searchHandler.searchAllAnswers(dataProvider);
                 break;
-            case "2":
+            case "topK":
                 searchHandler.searchTopKAnswers(dataProvider, receive_k());
+                break;
+            case "threshold":
+                searchHandler.searchThresholdAnswers(dataProvider, receiveThreshold());
                 break;
             default:
                 System.out.println("invalid input. restart and enter a valid input. Check ReadMe for more info.");
@@ -70,9 +65,15 @@ public class main {
 
     public static int receive_k() {
         Scanner scannerK = new Scanner(System.in);
-        System.out.println("You've chosen a top k search. Please enter your desired value for k: ");
+        System.out.print("Enter the desired value for k (int): ");
         return scannerK.nextInt();
 
+    }
+
+    public static Double receiveThreshold() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the desired threshold (Double): ");
+        return scanner.nextDouble();
     }
 
     public static void ascii_art() {
@@ -87,6 +88,33 @@ public class main {
         System.out.println("└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘");
         System.out.println();
 
+    }
+
+    public static String userInputData(Scanner scanner) {
+
+        // receive the file name we want to compute
+        System.out.println("Enter the file name you want to process (has to be stored in src/main/resources/input/): ");
+
+        return scanner.next();
+    }
+
+    public static String userInputComputation(Scanner scanner) {
+        // receive the mode of the search
+        System.out.println("Select the mode you want to start the application! Type ... \n" +
+                "  'classic' for a complete search, \n" +
+                "  'threshold' for a threshold search, \n" +
+                "  'topK' for a topK search. ");
+
+        return scanner.next();
+    }
+
+    public static String userInputTransducer(Scanner scanner) {
+        // receive the transducer mode that is used
+        System.out.println("Do you provide a transducer yourself or do you want to generate a transducer? type ... \n" +
+                "  'generate' if you want to use an auto-generated transducer, \n" +
+                "  'provided' if you provide a transducer on your own. ");
+
+        return scanner.next();
     }
 
 
