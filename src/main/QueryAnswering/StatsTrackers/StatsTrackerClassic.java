@@ -148,24 +148,16 @@ public class StatsTrackerClassic implements StatsTracker {
 
         File queryAnswers = new File("src/main/resources/output/queryResults.txt");
         FileWriter out;
-        int count = 0;
+
         try {
             out = new FileWriter(queryAnswers, false);
             out.write("query processed. \n");
 
-            // TODO: this doesn't really work correctly, right? We print every connection with weight 0.0 as a classical,
-            // TODO: but we should verify this with the path or the product automaton edges... (new attribute "classical"?)
             for (Pair pair : answerMap.keySet()) {
-                if (answerMap.get(pair) == 0.0) {
-                    count++;
-                    out.write("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair) + " (classical answer) \n");
-                } else
-                    out.write("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair) + "\n");
+                out.write("(" + pair.getValue0().toString() + ", " + pair.getValue1().toString() + ") with cost " + answerMap.get(pair) + "\n");
             }
-            int classicalAnswers = count;
-            int approxAnswers = answerMap.size() - count;
+
             out.write("total answers: " + answerMap.size());
-            out.write(". (" + classicalAnswers + " classical answer(s) and " + approxAnswers + " approximate answer(s).) \n");
             out.close();
             System.out.println("successfully wrote to file.");
 
