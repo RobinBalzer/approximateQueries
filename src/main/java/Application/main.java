@@ -1,32 +1,33 @@
+package Application;
+
 import DataProvider.DataProvider;
 import DataProvider.DataReader;
 
 import java.util.Scanner;
 
-public class main {
+class main {
 
     /**
-     * main function which is executed.
-     * We then delegate the task further down to the SearchHandler.
+     * Application.main function which is executed.
+     * We then delegate the task further down to the Application.SearchHandler.
      * If the user chooses a top k search, we also ask for the k value.
      *
      * @param args
      */
     public static void main(String[] args) throws Exception {
 
-        ascii_art();
+        // ascii_art();
 
-        String userChoiceComputationMode = "";
-        String userChoiceTransducerMode;
-        String userChoiceFileInput;
+        String userChoiceComputationMode = args[2];
+        String userChoiceTransducerMode = args[1];
+        String userChoiceFileInput = args[0];
+
+        System.out.println(main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+        System.out.println(args[0] + " " + args[1] + " " + args[2]);
 
         DataReader dataReader;
         SearchHandler searchHandler;
         Scanner scanner = new Scanner(System.in);
-
-        userChoiceFileInput = userInputData(scanner);
-        userChoiceTransducerMode = userInputTransducer(scanner);
-        userChoiceComputationMode = userInputComputation(scanner);
 
 
         if (userChoiceTransducerMode.equals("provided")) {
@@ -61,7 +62,63 @@ public class main {
                 System.out.println("invalid input. restart and enter a valid input. Check ReadMe for more info.");
                 break;
         }
+
+
+        /**
+         * previous user input with scanner
+         */
+        /*
+        ascii_art();
+
+        String userChoiceComputationMode = "";
+        String userChoiceTransducerMode;
+        String userChoiceFileInput;
+
+        DataReader dataReader;
+        Application.SearchHandler searchHandler;
+        Scanner scanner = new Scanner(System.in);
+
+        userChoiceFileInput = userInputData(scanner);
+        userChoiceTransducerMode = userInputTransducer(scanner);
+        userChoiceComputationMode = userInputComputation(scanner);
+
+
+        if (userChoiceTransducerMode.equals("provided")) {
+            dataReader = new DataReader(userChoiceFileInput, false);
+
+        } else if (userChoiceTransducerMode.equals("generate")) {
+            dataReader = new DataReader(userChoiceFileInput, true);
+        } else { // error ...
+            return;
+        }
+
+        searchHandler = new Application.SearchHandler(dataReader.getDataProvider());
+
+        // processes the data
+        dataReader.readFile();
+        // testing if the parsing was successful and correct -> check "parsedInputData.txt"
+        dataReader.printData();
+
+
+        DataProvider dataProvider = dataReader.getDataProvider();
+        switch (userChoiceComputationMode) {
+            case "classic":
+                searchHandler.searchAllAnswers(dataProvider);
+                break;
+            case "topK":
+                searchHandler.searchTopKAnswers(dataProvider, receive_k());
+                break;
+            case "threshold":
+                searchHandler.searchThresholdAnswers(dataProvider, receiveThreshold());
+                break;
+            default:
+                System.out.println("invalid input. restart and enter a valid input. Check ReadMe for more info.");
+                break;
+        }
+
+         */
     }
+
 
     public static int receive_k() {
         Scanner scannerK = new Scanner(System.in);
@@ -93,7 +150,7 @@ public class main {
     public static String userInputData(Scanner scanner) {
 
         // receive the file name we want to compute
-        System.out.println("Enter the file name you want to process (has to be stored in src/main/resources/input/): ");
+        System.out.println("Enter the file name you want to process (has to be stored in src/Application.main/resources/input/): ");
 
         return scanner.next();
     }

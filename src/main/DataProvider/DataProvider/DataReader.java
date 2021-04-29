@@ -1,5 +1,6 @@
 package DataProvider;
 
+import Application.Settings;
 import Database.DatabaseGraph;
 import Database.DatabaseNode;
 import Query.QueryGraph;
@@ -9,28 +10,34 @@ import Transducer.TransducerNode;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class DataReader {
     private String path;
     private boolean transducerAutoGeneration;
     private DataProvider dataProvider;
     private HashMap<String, Integer> amountOfNodesMap;
+    private String outputDirectory;
 
     public DataReader(String inputFile, boolean transducerAutoGeneration) {
-        this.path = "src/main/resources/input/" + inputFile;
+        this.path = Settings.inputFileDirectory + inputFile;
+        // this.path = "resources/input/" + inputFile;
+        // this.path = this.getClass().getClassLoader().getResource("src/main/resources/input/" + inputFile).toExternalForm();
         this.transducerAutoGeneration = transducerAutoGeneration;
         dataProvider = new DataProvider();
         dataProvider.alphabet = new HashSet<>();
         amountOfNodesMap = new HashMap<>();
+        this.outputDirectory = Settings.outputFileDirectory;
     }
 
     public void readFile() throws Exception {
 
         try {
-            File file = new File(path);
+             File file = new File(path);
+             BufferedReader br = new BufferedReader(new FileReader(file));
 
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            //System.out.println(path);
+            //InputStream in = getClass().getResourceAsStream("query-3.txt");
+            //BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
             String st;
             String[] words;
@@ -141,7 +148,7 @@ public class DataReader {
             e.printStackTrace();
         }
 
-        File stats = new File("src/main/resources/output/computationStats.txt");
+        File stats = new File(outputDirectory + "computationStats.txt");
         FileWriter out;
 
         int maxNodeAmountTotal = amountOfNodesMap.get("query") * amountOfNodesMap.get("transducer") * amountOfNodesMap.get("database");
@@ -315,7 +322,7 @@ public class DataReader {
             TransducerGraph transducerGraph = dataProvider.getTransducerGraph();
             DatabaseGraph databaseGraph = dataProvider.getDatabaseGraph();
 
-            PrintStream fileStream = new PrintStream("src/main/resources/output/parsedInputData.txt");
+            PrintStream fileStream = new PrintStream(outputDirectory + "parsedInputData.txt");
             PrintStream stdout = System.out;
             System.setOut(fileStream);
 

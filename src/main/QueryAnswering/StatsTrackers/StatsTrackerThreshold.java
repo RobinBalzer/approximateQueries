@@ -1,6 +1,7 @@
 package StatsTrackers;
 
 import Algorithms.DijkstraThreshold;
+import Application.Settings;
 import ProductAutomatonSpecification.ProductAutomatonConstructor;
 import DataProvider.DataProvider;
 import Database.DatabaseGraph;
@@ -21,6 +22,8 @@ public class StatsTrackerThreshold implements StatsTracker {
     DijkstraThreshold dijkstraThreshold;
     Double threshold;
 
+    String outputDirectory = Settings.outputFileDirectory;
+
     public StatsTrackerThreshold(DataProvider dataProvider, Double threshold) {
         this.queryGraph = dataProvider.getQueryGraph();
         this.transducerGraph = dataProvider.getTransducerGraph();
@@ -36,7 +39,10 @@ public class StatsTrackerThreshold implements StatsTracker {
     @Override
     public void runDijkstra() throws FileNotFoundException {
 
-        PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", false));
+        // todo: working intellij: replace the next two lines with the commented line
+        // PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", false));
+
+        PrintStream fileStream = new PrintStream(new FileOutputStream(outputDirectory + "graphs.txt", false));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
 
@@ -80,7 +86,9 @@ public class StatsTrackerThreshold implements StatsTracker {
 
     @Override
     public void writeTimeToFile(long milli, long milliPreprocessing, long milliTotal) {
-        File stats = new File("src/main/resources/output/computationStats.txt");
+        // todo: working intellij: replace the next two lines with the commented line
+        // File stats = new File("src/main/resources/output/computationStats.txt");
+        File stats = new File(outputDirectory + "computationStats.txt");
         FileWriter out;
 
 
@@ -148,8 +156,9 @@ public class StatsTrackerThreshold implements StatsTracker {
 
     @Override
     public void writeResultToFile() throws FileNotFoundException {
-
-        File queryAnswers = new File("src/main/resources/output/queryResults.txt");
+        // todo: working intellij: replace the next two lines with the commented line
+        // File queryAnswers = new File("src/main/resources/output/queryResults.txt");
+        File queryAnswers = new File(outputDirectory + "queryResults.txt");
         FileWriter out;
         try {
             out = new FileWriter(queryAnswers, false);
@@ -170,7 +179,9 @@ public class StatsTrackerThreshold implements StatsTracker {
             e.printStackTrace();
         }
 
-        PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", true));
+        // todo: working intellij: replace the next two lines with the commented line
+        // PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", true));
+        PrintStream fileStream = new PrintStream(new FileOutputStream(outputDirectory + "graphs.txt", true));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
         System.out.println("product automaton: ");
