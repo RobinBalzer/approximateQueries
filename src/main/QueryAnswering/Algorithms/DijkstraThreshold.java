@@ -59,14 +59,16 @@ public class DijkstraThreshold {
             setOfNodes.add(p);
             // line 7
             for (ProductAutomatonEdge edge : p.edges) {
-                setOfNodes.add(edge.target);
-                // line 8
-                relax(p, edge.target, edge);
+                // will only computed if the threshold won't be reached.
+                if (!(p.getWeight() + edge.cost > threshold)) {
+                    setOfNodes.add(edge.target);
+                    // line 8
+                    relax(p, edge.target, edge);
 
-                // this will keep the priorityQueue ordered.
-                queue.remove(edge.target);
-                queue.add(edge.target);
-
+                    // this will keep the priorityQueue ordered.
+                    queue.remove(edge.target);
+                    queue.add(edge.target);
+                }
             }
         }
     }

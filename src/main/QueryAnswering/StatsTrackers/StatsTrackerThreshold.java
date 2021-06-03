@@ -38,10 +38,6 @@ public class StatsTrackerThreshold implements StatsTracker {
 
     @Override
     public void runDijkstra() throws FileNotFoundException {
-
-        // todo: working intellij: replace the next two lines with the commented line
-        // PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", false));
-
         PrintStream fileStream = new PrintStream(new FileOutputStream(outputDirectory + "graphs.txt", false));
         PrintStream stdout = System.out;
         System.setOut(fileStream);

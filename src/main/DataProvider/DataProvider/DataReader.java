@@ -86,7 +86,6 @@ public class DataReader {
                         // System.out.println("Transducer info skipped. Initializing auto generation of transducer ...");
                         createTransducerPreservingClassicalAnswers();
 
-
                         do {
                             st = br.readLine();
 
