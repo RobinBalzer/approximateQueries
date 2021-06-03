@@ -1,5 +1,6 @@
 package DataProvider;
 
+import Application.Settings;
 import Database.DatabaseGraph;
 import Database.DatabaseNode;
 import Query.QueryGraph;
@@ -9,29 +10,34 @@ import Transducer.TransducerNode;
 
 import java.io.*;
 import java.util.*;
-import java.util.logging.Logger;
 
 public class DataReader {
     private String path;
     private boolean transducerAutoGeneration;
-    private Set<String> alphabet;
     private DataProvider dataProvider;
     private HashMap<String, Integer> amountOfNodesMap;
+    private String outputDirectory;
 
     public DataReader(String inputFile, boolean transducerAutoGeneration) {
-        this.path = "src/main/resources/input/" + inputFile;
+        this.path = Settings.inputFileDirectory + inputFile;
+        // this.path = "resources/input/" + inputFile;
+        // this.path = this.getClass().getClassLoader().getResource("src/main/resources/input/" + inputFile).toExternalForm();
         this.transducerAutoGeneration = transducerAutoGeneration;
-        alphabet = new HashSet<>();
         dataProvider = new DataProvider();
+        dataProvider.alphabet = new HashSet<>();
         amountOfNodesMap = new HashMap<>();
+        this.outputDirectory = Settings.outputFileDirectory;
     }
 
     public void readFile() throws Exception {
 
         try {
-            File file = new File(path);
+             File file = new File(path);
+             BufferedReader br = new BufferedReader(new FileReader(file));
 
-            BufferedReader br = new BufferedReader(new FileReader(file));
+            //System.out.println(path);
+            //InputStream in = getClass().getResourceAsStream("query-3.txt");
+            //BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
             String st;
             String[] words;
@@ -45,15 +51,15 @@ public class DataReader {
 
                 // start with finding out about the name of the data set
                 if (st.contains("name:")) {
-                   // System.out.println("Found 'name:' ");
+                    // System.out.println("Found 'name:' ");
                     words = st.split("name: ");
-                    dataProvider.setDatasetIdentifier(words[1].trim());
+                    dataProvider.setDataSetIdentifier(words[1].trim());
                     st = br.readLine();
                 }
 
                 // read all the data for the queryGraph...
                 if (st.contains("queryGraph:")) {
-                   // System.out.println("Found 'queryGraph:' ");
+                    // System.out.println("Found 'queryGraph:' ");
                     ArrayList<String> queryGraphData = new ArrayList<>();
                     amountOfNodes = 0;
                     st = br.readLine();
@@ -79,7 +85,6 @@ public class DataReader {
                     if (transducerAutoGeneration) {
                         // System.out.println("Transducer info skipped. Initializing auto generation of transducer ...");
                         createTransducerPreservingClassicalAnswers();
-
 
                         do {
                             st = br.readLine();
@@ -142,7 +147,7 @@ public class DataReader {
             e.printStackTrace();
         }
 
-        File stats = new File("src/main/resources/output/computationStats.txt");
+        File stats = new File(outputDirectory + "computationStats.txt");
         FileWriter out;
 
         int maxNodeAmountTotal = amountOfNodesMap.get("query") * amountOfNodesMap.get("transducer") * amountOfNodesMap.get("database");
@@ -188,7 +193,7 @@ public class DataReader {
             target = queryNodes.get(strArray[1]);
             label = strArray[2];
 
-            alphabet.add(label);
+            dataProvider.alphabet.add(label);
             dataProvider.queryGraph.addQueryObjectEdge(source, target, label);
         }
     }
@@ -275,28 +280,27 @@ public class DataReader {
 
     /**
      * auto-generation of a transducer. this transducer will only preserve classical answers.
-     * design choice: only one source and target node with n edges between them (alphabet size = n)
-     * other variation could be: having n source and target nodes with only one edge between them.
-     * other variation could be: having one node (initial and final) and n self-loops (alphabet size = n)
+     * idea: having one node (initial and final) and n self-loops (alphabet size = n)
+     * We need this style since otherwise we don't get classical answers of size > 1.
+     * (or we have to make every node initial and final...)
      */
     private void createTransducerPreservingClassicalAnswers() {
 
-        TransducerNode source = new TransducerNode("s0", true, false);
-        TransducerNode target = new TransducerNode("s1", false, true);
+        TransducerNode source = new TransducerNode("t0", true, true);
         String word; // working String
         String incoming;
         String outgoing;
         int cost = 0;
 
-        for (String s : alphabet) {
+        for (String s : dataProvider.alphabet) {
             word = s;
             incoming = word;
             outgoing = word;
 
-            dataProvider.transducerGraph.addTransducerObjectEdge(source, target, incoming, outgoing, cost);
+            dataProvider.transducerGraph.addTransducerObjectEdge(source, source, incoming, outgoing, cost);
         }
 
-        amountOfNodesMap.put("transducer", 2);
+        amountOfNodesMap.put("transducer", 1);
 
     }
 
@@ -317,7 +321,7 @@ public class DataReader {
             TransducerGraph transducerGraph = dataProvider.getTransducerGraph();
             DatabaseGraph databaseGraph = dataProvider.getDatabaseGraph();
 
-            PrintStream fileStream = new PrintStream("src/main/resources/output/parsedInputData.txt");
+            PrintStream fileStream = new PrintStream(outputDirectory + "parsedInputData.txt");
             PrintStream stdout = System.out;
             System.setOut(fileStream);
 
@@ -347,16 +351,8 @@ public class DataReader {
         System.out.println("---");
     }
 
-
-    public Set<String> getAlphabet() {
-        return alphabet;
-    }
-
     public DataProvider getDataProvider() {
         return dataProvider;
     }
 
-    public HashMap<String, Integer> getAmountOfNodesMap() {
-        return amountOfNodesMap;
-    }
 }
