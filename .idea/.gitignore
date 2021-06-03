@@ -7,5 +7,8 @@
 /dataSources.local.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+# IntelliJ project files
+*.iml
+*.iws
+*.ipr
 .idea/
-
