@@ -10,32 +10,36 @@ import Transducer.TransducerGraph;
 import org.javatuples.Pair;
 
 import java.io.*;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class StatsTrackerClassic implements StatsTracker {
+public class StatsTrackerTopKUnoptimized implements StatsTracker {
     QueryGraph queryGraph;
     TransducerGraph transducerGraph;
     DatabaseGraph databaseGraph;
     ProductAutomatonConstructor productAutomatonConstructor;
     HashMap<Pair<String, String>, Double> answerMap;
-    String outputDirectory = Settings.outputFileDirectory;
-
     DijkstraClassic dijkstraClassic;
 
-    public StatsTrackerClassic(DataProvider dataProvider) {
+    int topK;
+    String outputDirectory = Settings.outputFileDirectory;
+
+    public StatsTrackerTopKUnoptimized(DataProvider dataProvider, int topK) {
         this.queryGraph = dataProvider.getQueryGraph();
         this.transducerGraph = dataProvider.getTransducerGraph();
         this.databaseGraph = dataProvider.getDatabaseGraph();
 
+        this.topK = topK;
         this.productAutomatonConstructor = new ProductAutomatonConstructor(queryGraph, transducerGraph, databaseGraph);
         this.dijkstraClassic = new DijkstraClassic(productAutomatonConstructor);
         this.answerMap = new HashMap<>();
     }
 
-
     @Override
     public void runDijkstra() throws FileNotFoundException {
-
         PrintStream fileStream = new PrintStream(new FileOutputStream(outputDirectory + "graphs.txt", false));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
@@ -61,7 +65,6 @@ public class StatsTrackerClassic implements StatsTracker {
         // end of preprocessing
         long elapsedTimeNanoPreprocessing = System.nanoTime() - startPreprocessing; //System.currentTimeMillis() - startPreprocessing;
 
-
         // start of Dijkstra
         long start = System.nanoTime(); // System.currentTimeMillis();
 
@@ -73,6 +76,8 @@ public class StatsTrackerClassic implements StatsTracker {
         // start of postprocessing
         long startPostProcessing = System.nanoTime();
 
+        answerMap = sortAndLimit(answerMap, topK); // only receive the topK answers of that search
+
         // end of postprocessing
         long elapsedTimePostProcessing = System.nanoTime() - startPostProcessing;
 
@@ -81,7 +86,12 @@ public class StatsTrackerClassic implements StatsTracker {
         Settings.setPostprocessingTime(elapsedTimePostProcessing);
         Settings.setNumberOfAnswers(answerMap.size());
 
+
+        // writeTimeToFile(elapsedTimeNanoDijkstra, elapsedTimeNanoPreprocessing, elapsedTimeTotalNano);
+        // writeResultToFile();
+
     }
+
 
     @Deprecated
     @Override
@@ -145,7 +155,9 @@ public class StatsTrackerClassic implements StatsTracker {
     }
 
     @Override
-    public void printEndResult() {
+    public void printEndResult() throws FileNotFoundException {
+
+
 
         System.out.println("------------------");
         System.out.println("end result: ");
@@ -190,5 +202,22 @@ public class StatsTrackerClassic implements StatsTracker {
         System.setOut(stdout);
     }
 
+    private HashMap<Pair<String, String>, Double> sortAndLimit(HashMap<Pair<String, String>, Double> hm, int limit) {
+
+        HashMap<Pair<String, String>, Double> temp = hm.entrySet()
+                .stream()
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .limit(limit)
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return temp;
+
+    }
 
 }
+
+
+

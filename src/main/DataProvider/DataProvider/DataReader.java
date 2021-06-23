@@ -151,6 +151,7 @@ public class DataReader {
         FileWriter out;
 
         int maxNodeAmountTotal = amountOfNodesMap.get("query") * amountOfNodesMap.get("transducer") * amountOfNodesMap.get("database");
+        Settings.setNumberOfMaxNodesPossible(maxNodeAmountTotal);
 
         try {
             out = new FileWriter(stats, false);
