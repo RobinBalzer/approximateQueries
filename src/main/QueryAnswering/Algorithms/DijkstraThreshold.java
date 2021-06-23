@@ -52,7 +52,7 @@ public class DijkstraThreshold {
             // line 5
             ProductAutomatonNode p = queue.poll();
             // check if the threshold is already reached and terminate if so.
-            if (p.getWeight() > threshold) {
+            if (p.getWeight() >= threshold) {
                 return;
             }
             // line 6
@@ -60,7 +60,7 @@ public class DijkstraThreshold {
             // line 7
             for (ProductAutomatonEdge edge : p.edges) {
                 // will only computed if the threshold won't be reached.
-                if (!(p.getWeight() + edge.cost > threshold)) {
+                if (!(p.getWeight() + edge.cost >= threshold)) {
                     setOfNodes.add(edge.target);
                     // line 8
                     relax(p, edge.target, edge);

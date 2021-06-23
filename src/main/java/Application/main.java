@@ -3,8 +3,6 @@ package Application;
 import DataProvider.DataProvider;
 import DataProvider.DataReader;
 
-import java.util.Scanner;
-
 class main {
 
     /**
@@ -28,8 +26,6 @@ class main {
         } else {
             userChoiceParameter = "0";
         }
-
-        System.out.println(args[0] + " " + args[1] + " " + args[2]);
 
         DataReader dataReader;
         SearchHandler searchHandler;
@@ -59,14 +55,25 @@ class main {
             case "topK":
                 searchHandler.searchTopKAnswers(dataProvider, Integer.parseInt(userChoiceParameter));
                 break;
+            case "topKUO":
+                searchHandler.searchTopKAnswersUnoptimized(dataProvider, Integer.parseInt(userChoiceParameter));
+                break;
             case "threshold":
                 searchHandler.searchThresholdAnswers(dataProvider, Double.parseDouble(userChoiceParameter));
                 break;
+
             default:
                 System.out.println("invalid input. restart and enter a valid input. Check ReadMe for more info.");
                 break;
         }
 
+        String sb = Settings.getPreprocessingTime() + " " +
+                Settings.getDijkstraProcessingTime() + " " +
+                Settings.getCombinedTime() + " " +
+                Settings.getNumberOfMaxNodesPossible() + " " +
+                Settings.getNumberOfActualNodes() + " " +
+                Settings.getNumberOfAnswers();
+        System.out.print(sb);
     }
 
 

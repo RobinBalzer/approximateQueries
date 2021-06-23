@@ -2,9 +2,9 @@ package StatsTrackers;
 
 import Algorithms.DijkstraTopK;
 import Application.Settings;
-import ProductAutomatonSpecification.ProductAutomatonConstructor;
 import DataProvider.DataProvider;
 import Database.DatabaseGraph;
+import ProductAutomatonSpecification.ProductAutomatonConstructor;
 import Query.QueryGraph;
 import Transducer.TransducerGraph;
 import org.javatuples.Pair;
@@ -64,28 +64,33 @@ public class StatsTrackerTopK implements StatsTracker {
 
         System.setOut(stdout);
 
-        long startCombinedComputation = System.currentTimeMillis();
-
         // start of preprocessing
-        long startPreprocessing = System.currentTimeMillis();
-
+        long startPreprocessing = System.nanoTime();
         productAutomatonConstructor.construct();
 
-        long elapsedTimeMillisPreprocessing = System.currentTimeMillis() - startPreprocessing;
+        // end of preprocessing
+        long elapsedTimeNanoPreprocessing = System.nanoTime() - startPreprocessing; //System.currentTimeMillis() - startPreprocessing;
 
-        // start of the computation
-        long start = System.currentTimeMillis();
+        // start of Dijkstra
+        long start = System.nanoTime(); // System.currentTimeMillis();
 
         answerMap = dijkstraTopK.processDijkstraOverAllInitialNodes();
 
-        // Get elapsed time in milliseconds
-        long elapsedTimeMillis = System.currentTimeMillis() - start;
+        // end of Dijkstra
+        long elapsedTimeNanoDijkstra = System.nanoTime() - start; //System.currentTimeMillis() - start;
 
-        long elapsedTimeTotalMillis = System.currentTimeMillis() - startCombinedComputation;
+        // start of postprocessing
+        long startPostProcessing = System.nanoTime();
 
-        writeTimeToFile(elapsedTimeMillis, elapsedTimeMillisPreprocessing, elapsedTimeTotalMillis);
+        // end of postprocessing
+        long elapsedTimePostProcessing = System.nanoTime() - startPostProcessing;
 
-        printEndResult();
+        Settings.setPreprocessingTime(elapsedTimeNanoPreprocessing);
+        Settings.setDijkstraProcessingTime(elapsedTimeNanoDijkstra);
+        Settings.setPostprocessingTime(elapsedTimePostProcessing);
+        Settings.setNumberOfAnswers(answerMap.size());
+
+        // writeTimeToFile(elapsedTimeNanoDijkstra, elapsedTimeNanoPreprocessing, elapsedTimeTotalNano);
 
     }
 
@@ -93,7 +98,7 @@ public class StatsTrackerTopK implements StatsTracker {
     public void writeTimeToFile(long milli, long milliPreprocessing, long milliTotal) {
         // todo: working intellij: replace the next two lines with the commented line
         // File stats = new File("src/main/resources/output/computationStats.txt");
-        File stats = new File( outputDirectory + "computationStats.txt");
+        File stats = new File(outputDirectory + "computationStats.txt");
         FileWriter out;
 
 
@@ -106,11 +111,15 @@ public class StatsTrackerTopK implements StatsTracker {
         float compTimeMin = milli / (60 * 1000F);
 
         float compTimeMillisTotal = milliTotal;
-        float compTimeSecTotal = milli / 1000F;
-        float compTimeMinTotal = milli / (60 * 1000F);
+        float compTimeSecTotal = milliTotal / 1000F;
+        float compTimeMinTotal = milliTotal / (60 * 1000F);
+
+        int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
+        Settings.setNumberOfActualNodes(amountOfNodes);
 
         try {
-            int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
+
+
             out = new FileWriter(stats, true);
 
             out.write("amount of actual nodes in the product automaton: " + amountOfNodes + ". \n");
