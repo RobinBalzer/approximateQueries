@@ -85,6 +85,8 @@ public class StatsTrackerThreshold implements StatsTracker {
         Settings.setPostprocessingTime(elapsedTimePostProcessing);
         Settings.setCombinedTime(elapsedTimeTotalProcessing);
         Settings.setNumberOfAnswers(answerMap.size());
+        Settings.setNumberOfActualNodes(productAutomatonConstructor.productAutomatonGraph.nodes.size());
+
 
         // writeTimeToFile(elapsedTimeNanoDijkstra, elapsedTimeNanoPreprocessing, elapsedTimeTotalNano);
 
@@ -112,7 +114,6 @@ public class StatsTrackerThreshold implements StatsTracker {
 
 
         int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
-        Settings.setNumberOfActualNodes(amountOfNodes);
         try {
 
             out = new FileWriter(stats, true);

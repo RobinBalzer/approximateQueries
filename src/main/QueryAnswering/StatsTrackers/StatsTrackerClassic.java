@@ -83,6 +83,7 @@ public class StatsTrackerClassic implements StatsTracker {
         Settings.setPostprocessingTime(elapsedTimePostProcessing);
         Settings.setCombinedTime(elapsedTimeTotalProcessing);
         Settings.setNumberOfAnswers(answerMap.size());
+        Settings.setNumberOfActualNodes(productAutomatonConstructor.productAutomatonGraph.nodes.size());
 
     }
 
@@ -109,7 +110,7 @@ public class StatsTrackerClassic implements StatsTracker {
         float compTimeMinTotal = milliTotal / (60 * 1000F);
 
         int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
-        Settings.setNumberOfActualNodes(amountOfNodes);
+
 
         try {
 

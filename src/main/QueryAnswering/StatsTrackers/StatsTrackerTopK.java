@@ -93,6 +93,8 @@ public class StatsTrackerTopK implements StatsTracker {
         Settings.setPostprocessingTime(elapsedTimePostProcessing);
         Settings.setCombinedTime(elapsedTimeTotalProcessing);
         Settings.setNumberOfAnswers(answerMap.size());
+        Settings.setNumberOfActualNodes(productAutomatonConstructor.productAutomatonGraph.nodes.size());
+
 
         // writeTimeToFile(elapsedTimeNanoDijkstra, elapsedTimeNanoPreprocessing, elapsedTimeTotalNano);
 
@@ -119,7 +121,6 @@ public class StatsTrackerTopK implements StatsTracker {
         float compTimeMinTotal = milliTotal / (60 * 1000F);
 
         int amountOfNodes = productAutomatonConstructor.productAutomatonGraph.nodes.size();
-        Settings.setNumberOfActualNodes(amountOfNodes);
 
         try {
 
