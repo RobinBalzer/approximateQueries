@@ -69,6 +69,7 @@ class main {
 
         String sb = Settings.getPreprocessingTime() + " " +
                 Settings.getDijkstraProcessingTime() + " " +
+                Settings.getPostprocessingTime() + " " +
                 Settings.getCombinedTime() + " " +
                 Settings.getNumberOfMaxNodesPossible() + " " +
                 Settings.getNumberOfActualNodes() + " " +

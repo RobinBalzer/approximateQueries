@@ -81,9 +81,13 @@ public class StatsTrackerTopKUnoptimized implements StatsTracker {
         // end of postprocessing
         long elapsedTimePostProcessing = System.nanoTime() - startPostProcessing;
 
+        // combined total processing
+        long elapsedTimeTotalProcessing = System.nanoTime() - startPreprocessing;
+
         Settings.setPreprocessingTime(elapsedTimeNanoPreprocessing);
         Settings.setDijkstraProcessingTime(elapsedTimeNanoDijkstra);
         Settings.setPostprocessingTime(elapsedTimePostProcessing);
+        Settings.setCombinedTime(elapsedTimeTotalProcessing);
         Settings.setNumberOfAnswers(answerMap.size());
 
 

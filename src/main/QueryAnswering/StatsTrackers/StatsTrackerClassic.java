@@ -61,7 +61,6 @@ public class StatsTrackerClassic implements StatsTracker {
         // end of preprocessing
         long elapsedTimeNanoPreprocessing = System.nanoTime() - startPreprocessing; //System.currentTimeMillis() - startPreprocessing;
 
-
         // start of Dijkstra
         long start = System.nanoTime(); // System.currentTimeMillis();
 
@@ -76,9 +75,13 @@ public class StatsTrackerClassic implements StatsTracker {
         // end of postprocessing
         long elapsedTimePostProcessing = System.nanoTime() - startPostProcessing;
 
+        // combined total processing
+        long elapsedTimeTotalProcessing = System.nanoTime() - startPreprocessing;
+
         Settings.setPreprocessingTime(elapsedTimeNanoPreprocessing);
         Settings.setDijkstraProcessingTime(elapsedTimeNanoDijkstra);
         Settings.setPostprocessingTime(elapsedTimePostProcessing);
+        Settings.setCombinedTime(elapsedTimeTotalProcessing);
         Settings.setNumberOfAnswers(answerMap.size());
 
     }
