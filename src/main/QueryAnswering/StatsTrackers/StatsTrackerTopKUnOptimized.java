@@ -16,7 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class StatsTrackerTopKUnoptimized implements StatsTracker {
+public class StatsTrackerTopKUnOptimized implements StatsTracker {
     QueryGraph queryGraph;
     TransducerGraph transducerGraph;
     DatabaseGraph databaseGraph;
@@ -27,7 +27,7 @@ public class StatsTrackerTopKUnoptimized implements StatsTracker {
     int topK;
     String outputDirectory = Settings.outputFileDirectory;
 
-    public StatsTrackerTopKUnoptimized(DataProvider dataProvider, int topK) {
+    public StatsTrackerTopKUnOptimized(DataProvider dataProvider, int topK) {
         this.queryGraph = dataProvider.getQueryGraph();
         this.transducerGraph = dataProvider.getTransducerGraph();
         this.databaseGraph = dataProvider.getDatabaseGraph();
