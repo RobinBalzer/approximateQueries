@@ -23,8 +23,6 @@ public class ProductAutomatonGraph {
      * @param productAutomatonNode the productAutomatonNode
      */
     public void addProductAutomatonNode(ProductAutomatonNode productAutomatonNode) {
-        // TODO: is this line useless??
-        //nodes.addAll(Collections.emptyList());
 
         for (ProductAutomatonNode node : nodes) {
             if (node.identifier.getValue0().identifier.equalsIgnoreCase(productAutomatonNode.identifier.getValue0().identifier) &&
