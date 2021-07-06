@@ -103,8 +103,6 @@ public class StatsTrackerTopKUnOptimized implements StatsTracker {
     @Override
     // deprecated since we don't get time in milliseconds, but nanoseconds. -> needs to be adjusted
     public void writeTimeToFile(long milli, long milliPreprocessing, long milliTotal) {
-        // todo: working intellij: replace the next two lines with the commented line
-        // File stats = new File("src/main/resources/output/computationStats.txt");
         File stats = new File(outputDirectory + "computationStats.txt");
         FileWriter out;
 
@@ -175,8 +173,6 @@ public class StatsTrackerTopKUnOptimized implements StatsTracker {
     @Override
     public void writeResultToFile() throws FileNotFoundException {
 
-        // todo: working intellij: replace the next two lines with the commented line
-        // File queryAnswers = new File("src/main/resources/output/queryResults.txt");
         File queryAnswers = new File(outputDirectory + "queryResults.txt");
         FileWriter out;
 
@@ -197,8 +193,6 @@ public class StatsTrackerTopKUnOptimized implements StatsTracker {
             e.printStackTrace();
         }
 
-        // todo: working intellij: replace the next two lines with the commented line
-        // PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", true));
         PrintStream fileStream = new PrintStream(new FileOutputStream(outputDirectory + "graphs.txt", true));
         PrintStream stdout = System.out;
         System.setOut(fileStream);

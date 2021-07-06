@@ -11,6 +11,9 @@ import org.javatuples.Pair;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class StatsTrackerThreshold implements StatsTracker {
     QueryGraph queryGraph;
@@ -73,7 +76,7 @@ public class StatsTrackerThreshold implements StatsTracker {
 
         // start of postprocessing
         long startPostProcessing = System.nanoTime();
-
+        answerMap = sortResults(answerMap);
         // end of postprocessing
         long elapsedTimePostProcessing = System.nanoTime() - startPostProcessing;
 
@@ -94,8 +97,6 @@ public class StatsTrackerThreshold implements StatsTracker {
 
     @Override
     public void writeTimeToFile(long milli, long milliPreprocessing, long milliTotal) {
-        // todo: working intellij: replace the next two lines with the commented line
-        // File stats = new File("src/main/resources/output/computationStats.txt");
         File stats = new File(outputDirectory + "computationStats.txt");
         FileWriter out;
 
@@ -166,8 +167,7 @@ public class StatsTrackerThreshold implements StatsTracker {
 
     @Override
     public void writeResultToFile() throws FileNotFoundException {
-        // todo: working intellij: replace the next two lines with the commented line
-        // File queryAnswers = new File("src/main/resources/output/queryResults.txt");
+
         File queryAnswers = new File(outputDirectory + "queryResults.txt");
         FileWriter out;
         try {
@@ -189,13 +189,23 @@ public class StatsTrackerThreshold implements StatsTracker {
             e.printStackTrace();
         }
 
-        // todo: working intellij: replace the next two lines with the commented line
-        // PrintStream fileStream = new PrintStream(new FileOutputStream("src/main/resources/output/graphs.txt", true));
         PrintStream fileStream = new PrintStream(new FileOutputStream(outputDirectory + "graphs.txt", true));
         PrintStream stdout = System.out;
         System.setOut(fileStream);
         System.out.println("product automaton: ");
         productAutomatonConstructor.productAutomatonGraph.printGraph();
         System.setOut(stdout);
+    }
+
+    private HashMap<Pair<String, String>, Double> sortResults(HashMap<Pair<String, String>, Double> hm) {
+
+        return hm.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, LinkedHashMap::new
+                ));
     }
 }
