@@ -56,12 +56,14 @@ class main {
                 searchHandler.searchTopKAnswers(dataProvider, Integer.parseInt(userChoiceParameter));
                 break;
             case "topKUO":
-                searchHandler.searchTopKAnswersUnoptimized(dataProvider, Integer.parseInt(userChoiceParameter));
+                searchHandler.searchTopKAnswersUnOptimized(dataProvider, Integer.parseInt(userChoiceParameter));
                 break;
             case "threshold":
                 searchHandler.searchThresholdAnswers(dataProvider, Double.parseDouble(userChoiceParameter));
                 break;
-
+            case "thresholdUO":
+                searchHandler.searchThresholdAnswersUnOptimized(dataProvider, Double.parseDouble(userChoiceParameter));
+                break;
             default:
                 System.out.println("invalid input. restart and enter a valid input. Check ReadMe for more info.");
                 break;
