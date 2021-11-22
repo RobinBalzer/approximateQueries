@@ -20,7 +20,7 @@ nodes:                                      <the database has a simple form sinc
 a                                           <just name the database nodes...>
 b
 c
-edges:                                      <again, don't miss the edges: keyword. the parser will thank you :)>
+edges:                                      <again, don't miss the "edges:" keyword. the parser will thank you :)>
 a, b, S                                     <simple form of the edges: source, target, label>
 b, c, T
 c, a, R                                     < summary: >

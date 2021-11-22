@@ -64,19 +64,24 @@ class main {
             case "thresholdUO":
                 searchHandler.searchThresholdAnswersUnOptimized(dataProvider, Double.parseDouble(userChoiceParameter));
                 break;
+            case "thresholdLW":
+                searchHandler.searchLargestWeight(dataProvider);
+                break;
             default:
                 System.out.println("invalid input. restart and enter a valid input. Check ReadMe for more info.");
                 break;
         }
 
-        String sb = Settings.getPreprocessingTime() + " " +
-                Settings.getDijkstraProcessingTime() + " " +
-                Settings.getPostprocessingTime() + " " +
-                Settings.getCombinedTime() + " " +
-                Settings.getNumberOfMaxNodesPossible() + " " +
-                Settings.getNumberOfActualNodes() + " " +
-                Settings.getNumberOfAnswers();
-        System.out.print(sb);
+        if (!userChoiceComputationMode.equals("thresholdLW")) {
+            String sb = Settings.getPreprocessingTime() + " " +
+                    Settings.getDijkstraProcessingTime() + " " +
+                    Settings.getPostprocessingTime() + " " +
+                    Settings.getCombinedTime() + " " +
+                    Settings.getNumberOfMaxNodesPossible() + " " +
+                    Settings.getNumberOfActualNodes() + " " +
+                    Settings.getNumberOfAnswers();
+            System.out.print(sb);
+        } else System.out.println(Settings.getLargestWeight());
     }
 
 

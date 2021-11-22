@@ -2,11 +2,14 @@ package Application;
 
 public class Settings {
 
-     public static String inputFileDirectory = "src/main/resources/input/"; // use this for Intellij runs
-    //public static String inputFileDirectory = "resources/input/"; // use this for building the .jar
+    // public static String inputFileDirectory = "src/main/resources/input/"; // use this for Intellij runs
+    public static String inputFileDirectory = "resources/input/"; // use this for building the .jar
 
-     public static String outputFileDirectory = "src/main/resources/output/"; // use this for Intellij runs
-    //public static String outputFileDirectory = "resources/output/"; // use this for building the .jar
+    // public static String inputParserResults = "src/main/resources/input/"; // use this for Intellij runs
+    public static String inputParserResults = "resources/inputParserResults/"; // use this for building the .jar
+
+    // public static String outputFileDirectory = "src/main/resources/output/"; // use this for Intellij runs
+     public static String outputFileDirectory = "resources/output/"; // use this for building the .jar
 
     public static int numberOfMaxNodesPossible;
     public static int numberOfActualNodes;
@@ -17,6 +20,8 @@ public class Settings {
     public static long postprocessingTime;
 
     public static int numberOfAnswers;
+
+    public static Double largestWeight;
 
     public static long getPreprocessingTime() {
         return preprocessingTime;
@@ -72,5 +77,13 @@ public class Settings {
 
     public static void setNumberOfActualNodes(int numberOfActualNodes) {
         Settings.numberOfActualNodes = numberOfActualNodes;
+    }
+
+    public static Double getLargestWeight() {
+        return largestWeight;
+    }
+
+    public static void setLargestWeight(Double largestWeight) {
+        Settings.largestWeight = largestWeight;
     }
 }

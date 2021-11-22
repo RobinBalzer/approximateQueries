@@ -19,7 +19,7 @@ public class DataReader {
     private String outputDirectory;
 
     public DataReader(String inputFile, boolean transducerAutoGeneration) {
-        this.path = Settings.inputFileDirectory + inputFile;
+        this.path = Settings.inputParserResults + inputFile;
         // this.path = "resources/input/" + inputFile;
         // this.path = this.getClass().getClassLoader().getResource("src/main/resources/input/" + inputFile).toExternalForm();
         this.transducerAutoGeneration = transducerAutoGeneration;

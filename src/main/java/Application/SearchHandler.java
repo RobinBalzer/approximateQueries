@@ -16,6 +16,11 @@ public class SearchHandler {
         statsTrackerClassic.runDijkstra();
     }
 
+    public void searchLargestWeight(DataProvider dataProvider)  {
+        StatsTrackerLargestWeight statsTrackerLargestWeight = new StatsTrackerLargestWeight(dataProvider);
+        statsTrackerLargestWeight.runDijkstra();
+    }
+
     public void searchTopKAnswers(DataProvider dataProvider, int k) throws FileNotFoundException {
         StatsTrackerTopK statsTrackerTopK = new StatsTrackerTopK(dataProvider, k);
         statsTrackerTopK.runDijkstra();
