@@ -72,6 +72,8 @@ class main {
                 break;
         }
 
+        boolean possibleInfiniteRun = Settings.getMaxIterationStepsInDijkstraLoop() == Settings.getNumberOfMaxNodesPossible();
+
         if (!userChoiceComputationMode.equals("thresholdLW")) {
             String sb = Settings.getPreprocessingTime() + " " +
                     Settings.getDijkstraProcessingTime() + " " +
@@ -79,7 +81,8 @@ class main {
                     Settings.getCombinedTime() + " " +
                     Settings.getNumberOfMaxNodesPossible() + " " +
                     Settings.getNumberOfActualNodes() + " " +
-                    Settings.getNumberOfAnswers();
+                    Settings.getNumberOfAnswers() + " " +
+                    possibleInfiniteRun;
             System.out.print(sb);
         } else System.out.println(Settings.getLargestWeight());
     }

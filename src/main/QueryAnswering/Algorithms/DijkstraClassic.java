@@ -1,5 +1,6 @@
 package Algorithms;
 
+import Application.Settings;
 import ProductAutomatonSpecification.ProductAutomatonConstructor;
 import ProductAutomatonSpecification.ProductAutomatonEdge;
 import ProductAutomatonSpecification.ProductAutomatonGraph;
@@ -28,6 +29,7 @@ public class DijkstraClassic {
     // answerSet
     HashMap<Pair<String, String>, Double> answerMap;
 
+    int dijkstracounter = 0;
 
 
     public DijkstraClassic(ProductAutomatonConstructor productAutomatonConstructor) {
@@ -53,6 +55,8 @@ public class DijkstraClassic {
      */
 
     private void algo_dijkstra(ProductAutomatonNode sourceNode) {
+        System.out.println("algo dijkstra");
+
 
 
         // line 1
@@ -67,7 +71,13 @@ public class DijkstraClassic {
         // System.out.println(queue);
 
         // line 4
-        while (!queue.isEmpty()) {
+        // we need the second condition for a proper termination in possible infinite runs.
+        // the condition is chosen dynamically, i.e. for larger input structures it iterates more often.
+        // the infinite loop arises when we use "searchAll()" over an input that allows for loops with weight 0, thus dijkstra endlessly explores the "new" infinite path
+        while (!queue.isEmpty() && (dijkstracounter < Settings.getNumberOfMaxNodesPossible())) {
+            dijkstracounter++;
+            System.out.println(dijkstracounter);
+
             // line 5
             ProductAutomatonNode p = queue.poll();
             // todo: if p has larger weight: return "threshold is reached"
@@ -125,6 +135,8 @@ public class DijkstraClassic {
 
         // for all initial nodes...
         for (ProductAutomatonNode initialNode : productAutomatonConstructor.productAutomatonGraph.initialNodes) {
+            System.out.print("dijkstra for initial node: " );
+            initialNode.print();
 
             // clean up from previous runs...
             predecessor.clear();
@@ -134,6 +146,11 @@ public class DijkstraClassic {
             algo_dijkstra(initialNode);
             // put the new shortest-paths into the answer set
             retrieveResultForOneInitialNode(initialNode);
+
+            // update maxIterationStepsInDijkstraLoop
+            if (dijkstracounter > Settings.getMaxIterationStepsInDijkstraLoop()) {
+                Settings.setMaxIterationStepsInDijkstraLoop(dijkstracounter);
+            }
 
         }
 
