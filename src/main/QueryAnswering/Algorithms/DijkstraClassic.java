@@ -55,7 +55,7 @@ public class DijkstraClassic {
      */
 
     private void algo_dijkstra(ProductAutomatonNode sourceNode) {
-        System.out.println("algo dijkstra");
+        //System.out.println("algo dijkstra");
 
 
 
@@ -74,9 +74,9 @@ public class DijkstraClassic {
         // we need the second condition for a proper termination in possible infinite runs.
         // the condition is chosen dynamically, i.e. for larger input structures it iterates more often.
         // the infinite loop arises when we use "searchAll()" over an input that allows for loops with weight 0, thus dijkstra endlessly explores the "new" infinite path
-        while (!queue.isEmpty() && (dijkstracounter < Settings.getNumberOfMaxNodesPossible())) {
+        while (!queue.isEmpty() && (dijkstracounter < Settings.getRestrictionToPreventInfiniteRuns())) {
             dijkstracounter++;
-            System.out.println(dijkstracounter);
+            //System.out.println(dijkstracounter);
 
             // line 5
             ProductAutomatonNode p = queue.poll();
@@ -135,8 +135,8 @@ public class DijkstraClassic {
 
         // for all initial nodes...
         for (ProductAutomatonNode initialNode : productAutomatonConstructor.productAutomatonGraph.initialNodes) {
-            System.out.print("dijkstra for initial node: " );
-            initialNode.print();
+            //System.out.print("dijkstra for initial node: " );
+            //initialNode.print();
 
             // clean up from previous runs...
             predecessor.clear();
@@ -148,6 +148,8 @@ public class DijkstraClassic {
             retrieveResultForOneInitialNode(initialNode);
 
             // update maxIterationStepsInDijkstraLoop
+            System.out.println("dijkstra counter: " + dijkstracounter);
+            System.out.println("current settings value: " + Settings.getMaxIterationStepsInDijkstraLoop());
             if (dijkstracounter > Settings.getMaxIterationStepsInDijkstraLoop()) {
                 Settings.setMaxIterationStepsInDijkstraLoop(dijkstracounter);
             }

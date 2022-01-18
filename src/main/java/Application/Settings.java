@@ -1,17 +1,24 @@
 package Application;
 
+import java.math.BigInteger;
+
 public class Settings {
 
-     public static String inputFileDirectory = "src/main/resources/input/"; // use this for Intellij runs
+    //public static String inputFileDirectory = "src/main/resources/input/"; // use this for Intellij runs
     //public static String inputFileDirectory = "resources/input/"; // use this for building the .jar
+    public static String inputFileDirectory = ""; // use this for building the .jar
 
-     public static String inputParserResults = "src/main/resources/input/"; // use this for Intellij runs
+    // public static String inputParserResults = "src/main/resources/input/"; // use this for Intellij runs
     //public static String inputParserResults = "resources/inputParserResults/"; // use this for building the .jar
+    public static String inputParserResults = "queries/"; // use this for building the .jar
 
-     public static String outputFileDirectory = "src/main/resources/output/"; // use this for Intellij runs
-    // public static String outputFileDirectory = "resources/output/"; // use this for building the .jar
+
+    // public static String outputFileDirectory = "src/main/resources/output/"; // use this for Intellij runs
+     //public static String outputFileDirectory = "resources/output/"; // use this for building the .jar
+    public static String outputFileDirectory = ""; // use this for building the .jar
 
     public static int numberOfMaxNodesPossible;
+    public static long restrictionToPreventInfiniteRuns;
     public static int numberOfActualNodes;
     public static int maxIterationStepsInDijkstraLoop;
 
@@ -70,6 +77,11 @@ public class Settings {
 
     public static void setNumberOfMaxNodesPossible(int numberOfMaxNodesPossible) {
         Settings.numberOfMaxNodesPossible = numberOfMaxNodesPossible;
+        Settings.restrictionToPreventInfiniteRuns = (long) numberOfMaxNodesPossible * numberOfMaxNodesPossible * numberOfMaxNodesPossible;
+    }
+
+    public static long getRestrictionToPreventInfiniteRuns() {
+        return restrictionToPreventInfiniteRuns;
     }
 
     public static int getNumberOfActualNodes() {

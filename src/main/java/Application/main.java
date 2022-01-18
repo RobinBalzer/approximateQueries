@@ -20,6 +20,7 @@ class main {
         String userChoiceTransducerMode = args[1];
         String userChoiceFileInput = args[0];
         String userChoiceParameter = "";
+        Settings.setMaxIterationStepsInDijkstraLoop(-1);
 
         if (args.length > 3) {
             userChoiceParameter = args[3];
@@ -72,9 +73,13 @@ class main {
                 break;
         }
 
-        boolean possibleInfiniteRun = Settings.getMaxIterationStepsInDijkstraLoop() == Settings.getNumberOfMaxNodesPossible();
+        boolean possibleInfiniteRun = Settings.getMaxIterationStepsInDijkstraLoop() == Settings.getRestrictionToPreventInfiniteRuns();
+        System.out.println("max iteration steps: " + Settings.getMaxIterationStepsInDijkstraLoop());
+        System.out.println("number of max nodes possible: " + Settings.getNumberOfMaxNodesPossible());
+        System.out.println("possible inf run: " + possibleInfiniteRun);
 
         if (!userChoiceComputationMode.equals("thresholdLW")) {
+
             String sb = Settings.getPreprocessingTime() + " " +
                     Settings.getDijkstraProcessingTime() + " " +
                     Settings.getPostprocessingTime() + " " +
@@ -85,6 +90,10 @@ class main {
                     possibleInfiniteRun;
             System.out.print(sb);
         } else System.out.println(Settings.getLargestWeight());
+    }
+
+    private void debugMode() {
+
     }
 
 

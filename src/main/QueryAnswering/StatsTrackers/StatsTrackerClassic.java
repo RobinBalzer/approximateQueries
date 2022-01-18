@@ -38,7 +38,7 @@ public class StatsTrackerClassic implements StatsTracker {
 
     @Override
     public void runDijkstra() throws FileNotFoundException {
-        System.out.println("run dijkstra...");
+        //System.out.println("run dijkstra...");
 
         PrintStream fileStream = new PrintStream(new FileOutputStream(outputDirectory + "graphs.txt", false));
         PrintStream stdout = System.out;
@@ -58,20 +58,20 @@ public class StatsTrackerClassic implements StatsTracker {
 
         System.setOut(stdout);
 
-        System.out.println("start of preprocessing...");
+        //System.out.println("start of preprocessing...");
         // start of preprocessing
         long startPreprocessing = System.nanoTime();
         productAutomatonConstructor.construct();
-        System.out.println("end of preprocessing...");
+        //System.out.println("end of preprocessing...");
         // end of preprocessing
         long elapsedTimeNanoPreprocessing = System.nanoTime() - startPreprocessing; //System.currentTimeMillis() - startPreprocessing;
 
-        System.out.println("start of dijkstra...");
+        //System.out.println("start of dijkstra...");
         // start of Dijkstra
         long start = System.nanoTime(); // System.currentTimeMillis();
 
         answerMap = dijkstraClassic.processDijkstraOverAllInitialNodes();
-        System.out.println("end of dijkstra...");
+        //System.out.println("end of dijkstra...");
         // end of Dijkstra
         long elapsedTimeNanoDijkstra = System.nanoTime() - start; //System.currentTimeMillis() - start;
 
