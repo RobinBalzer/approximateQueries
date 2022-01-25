@@ -1,5 +1,6 @@
 package Algorithms;
 
+import Application.Settings;
 import ProductAutomatonSpecification.ProductAutomatonConstructor;
 import ProductAutomatonSpecification.ProductAutomatonEdge;
 import ProductAutomatonSpecification.ProductAutomatonGraph;
@@ -26,6 +27,8 @@ public class DijkstraThreshold {
     // answerSet
     HashMap<Pair<String, String>, Double> answerMap;
 
+    int dijkstracounter = 0;
+
     // threshold value
     Double threshold;
 
@@ -48,7 +51,8 @@ public class DijkstraThreshold {
         // line 3
         queue.addAll(productAutomatonConstructor.productAutomatonGraph.nodes);
         // line 4
-        while (!queue.isEmpty()) {
+        while (!queue.isEmpty() && (dijkstracounter < Settings.getRestrictionToPreventInfiniteRuns())) {
+            dijkstracounter++;
             // line 5
             ProductAutomatonNode p = queue.poll();
             // check if the threshold is already reached and terminate if so.

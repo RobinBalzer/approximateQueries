@@ -74,12 +74,11 @@ class main {
         }
 
         boolean possibleInfiniteRun = Settings.getMaxIterationStepsInDijkstraLoop() == Settings.getRestrictionToPreventInfiniteRuns();
-        System.out.println("max iteration steps: " + Settings.getMaxIterationStepsInDijkstraLoop());
-        System.out.println("number of max nodes possible: " + Settings.getNumberOfMaxNodesPossible());
-        System.out.println("possible inf run: " + possibleInfiniteRun);
+        //System.out.println("max iteration steps: " + Settings.getMaxIterationStepsInDijkstraLoop());
+        //System.out.println("number of max nodes possible: " + Settings.getNumberOfMaxNodesPossible());
+        //System.out.println("possible inf run: " + possibleInfiniteRun);
 
         if (!userChoiceComputationMode.equals("thresholdLW")) {
-
             String sb = Settings.getPreprocessingTime() + " " +
                     Settings.getDijkstraProcessingTime() + " " +
                     Settings.getPostprocessingTime() + " " +
@@ -89,13 +88,8 @@ class main {
                     Settings.getNumberOfAnswers() + " " +
                     possibleInfiniteRun;
             System.out.print(sb);
-        } else System.out.println(Settings.getLargestWeight());
+        } else System.out.print(Settings.getLargestWeight());
     }
-
-    private void debugMode() {
-
-    }
-
 
     public static void ascii_art() {
         System.out.println();

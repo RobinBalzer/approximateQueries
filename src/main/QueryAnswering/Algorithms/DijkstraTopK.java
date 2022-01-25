@@ -1,5 +1,6 @@
 package Algorithms;
 
+import Application.Settings;
 import ProductAutomatonSpecification.ProductAutomatonConstructor;
 import ProductAutomatonSpecification.ProductAutomatonEdge;
 import ProductAutomatonSpecification.ProductAutomatonGraph;
@@ -30,6 +31,8 @@ public class DijkstraTopK {
     // int value k for topK search
     int k;
 
+    int dijkstracounter = 0;
+
     public DijkstraTopK(ProductAutomatonConstructor productAutomatonConstructor, int k) {
         predecessor = new HashMap<>();
         setOfNodes = new HashSet<>();
@@ -53,7 +56,8 @@ public class DijkstraTopK {
         queue.addAll(productAutomatonConstructor.productAutomatonGraph.nodes);
 
         // line 4
-        while (!queue.isEmpty()) {
+        while (!queue.isEmpty() && (dijkstracounter < Settings.getRestrictionToPreventInfiniteRuns())) {
+            dijkstracounter++;
             // line 5
             ProductAutomatonNode p = queue.poll();
             // line 6
