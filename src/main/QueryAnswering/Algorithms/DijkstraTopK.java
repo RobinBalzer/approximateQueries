@@ -135,6 +135,13 @@ public class DijkstraTopK {
             // put the new shortest-paths into the answer set
             retrieveResultForOneInitialNode(initialNode);
 
+            // update maxIterationStepsInDijkstraLoop
+            //System.out.println("dijkstra counter: " + dijkstracounter);
+            //System.out.println("current settings value: " + Settings.getMaxIterationStepsInDijkstraLoop());
+            if (dijkstracounter > Settings.getMaxIterationStepsInDijkstraLoop()) {
+                Settings.setMaxIterationStepsInDijkstraLoop(dijkstracounter);
+            }
+
         }
 
         return answerMap;

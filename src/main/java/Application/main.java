@@ -14,7 +14,7 @@ class main {
      */
     public static void main(String[] args) throws Exception {
 
-        // ascii_art();
+        ascii_art();
 
         String userChoiceComputationMode = args[2];
         String userChoiceTransducerMode = args[1];
@@ -32,40 +32,51 @@ class main {
         SearchHandler searchHandler;
 
         if (userChoiceTransducerMode.equals("provided")) {
+            System.out.println("provided");
             dataReader = new DataReader(userChoiceFileInput, false);
 
         } else if (userChoiceTransducerMode.equals("generate")) {
+            System.out.println("generate");
             dataReader = new DataReader(userChoiceFileInput, true);
         } else { // error ...
+            System.out.println("error");
             return;
         }
 
         searchHandler = new SearchHandler(dataReader.getDataProvider());
-
+        System.out.println("start of data processing...");
         // processes the data
         dataReader.readFile();
         // testing if the parsing was successful and correct -> check "parsedInputData.txt"
         dataReader.printData();
-
+        System.out.println("end of data processing...");
 
         DataProvider dataProvider = dataReader.getDataProvider();
+        System.out.println("userChoice: " + userChoiceComputationMode);
+
         switch (userChoiceComputationMode) {
             case "classic":
+                System.out.println("classic mode");
                 searchHandler.searchAllAnswers(dataProvider);
                 break;
             case "topK":
+                System.out.println("topK mode");
                 searchHandler.searchTopKAnswers(dataProvider, Integer.parseInt(userChoiceParameter));
                 break;
             case "topKUO":
+                System.out.println("topKUO mode");
                 searchHandler.searchTopKAnswersUnOptimized(dataProvider, Integer.parseInt(userChoiceParameter));
                 break;
             case "threshold":
+                System.out.println("threshold mode");
                 searchHandler.searchThresholdAnswers(dataProvider, Double.parseDouble(userChoiceParameter));
                 break;
             case "thresholdUO":
+                System.out.println("thresholdUO mode");
                 searchHandler.searchThresholdAnswersUnOptimized(dataProvider, Double.parseDouble(userChoiceParameter));
                 break;
             case "thresholdLW":
+                System.out.println("thresholdLW mode");
                 searchHandler.searchLargestWeight(dataProvider);
                 break;
             default:

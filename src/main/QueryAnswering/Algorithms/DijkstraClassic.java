@@ -131,10 +131,13 @@ public class DijkstraClassic {
     }
 
     public HashMap<Pair<String, String>, Double> processDijkstraOverAllInitialNodes() {
+        int initialNodeCounter = 0;
 
 
         // for all initial nodes...
         for (ProductAutomatonNode initialNode : productAutomatonConstructor.productAutomatonGraph.initialNodes) {
+            System.out.println("number of initial nodes: " + productAutomatonConstructor.productAutomatonGraph.initialNodes.size() + " already visited: " + initialNodeCounter);
+            initialNodeCounter++;
             //System.out.print("dijkstra for initial node: " );
             //initialNode.print();
 
@@ -148,8 +151,8 @@ public class DijkstraClassic {
             retrieveResultForOneInitialNode(initialNode);
 
             // update maxIterationStepsInDijkstraLoop
-            //System.out.println("dijkstra counter: " + dijkstracounter);
-            //System.out.println("current settings value: " + Settings.getMaxIterationStepsInDijkstraLoop());
+            System.out.println("dijkstra counter: " + dijkstracounter);
+            System.out.println("current settings value: " + Settings.getMaxIterationStepsInDijkstraLoop());
             if (dijkstracounter > Settings.getMaxIterationStepsInDijkstraLoop()) {
                 Settings.setMaxIterationStepsInDijkstraLoop(dijkstracounter);
             }

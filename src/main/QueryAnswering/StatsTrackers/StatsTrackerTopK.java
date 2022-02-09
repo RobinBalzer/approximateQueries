@@ -10,6 +10,7 @@ import Transducer.TransducerGraph;
 import org.javatuples.Pair;
 
 import java.io.*;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -82,7 +83,7 @@ public class StatsTrackerTopK implements StatsTracker {
 
         // start of postprocessing
         long startPostProcessing = System.nanoTime();
-        answerMap = sortResults(answerMap);
+        answerMap = sortAndLimit(answerMap, topK);
         // end of postprocessing
         long elapsedTimePostProcessing = System.nanoTime() - startPostProcessing;
 
@@ -212,15 +213,18 @@ public class StatsTrackerTopK implements StatsTracker {
 
     }
 
-    private HashMap<Pair<String, String>, Double> sortResults(HashMap<Pair<String, String>, Double> hm) {
+    private HashMap<Pair<String, String>, Double> sortAndLimit(HashMap<Pair<String, String>, Double> hm, int limit) {
 
-        return hm.entrySet()
+        HashMap<Pair<String, String>, Double> temp = hm.entrySet()
                 .stream()
-                .sorted(Map.Entry.comparingByValue())
+                .sorted(Comparator.comparing(Map.Entry::getValue))
+                .limit(limit)
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
-                        (e1, e2) -> e1, LinkedHashMap::new
-                ));
+                        (e1, e2) -> e1, LinkedHashMap::new));
+
+        return temp;
+
     }
 }

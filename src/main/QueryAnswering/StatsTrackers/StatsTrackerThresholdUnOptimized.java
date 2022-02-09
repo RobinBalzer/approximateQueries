@@ -61,25 +61,31 @@ public class StatsTrackerThresholdUnOptimized implements StatsTracker {
 
         // start of preprocessing
         long startPreprocessing = System.nanoTime();
+        System.out.println("start of preprocessing");
         productAutomatonConstructor.construct();
 
         // end of preprocessing
+        System.out.println("end of preprocessing");
         long elapsedTimeNanoPreprocessing = System.nanoTime() - startPreprocessing; //System.currentTimeMillis() - startPreprocessing;
 
         // start of Dijkstra
+        System.out.println("start of dijkstra");
         long start = System.nanoTime(); // System.currentTimeMillis();
 
         answerMap = dijkstraClassic.processDijkstraOverAllInitialNodes();
 
         // end of Dijkstra
+        System.out.println("end of dijkstra");
         long elapsedTimeNanoDijkstra = System.nanoTime() - start; //System.currentTimeMillis() - start;
 
         // start of postprocessing
+        System.out.println("start of postprocessing");
         long startPostProcessing = System.nanoTime();
 
         answerMap = sortAndThreshold(answerMap, threshold); // obtain only the results inside the threshold
 
         // end of postprocessing
+        System.out.println("end of postprocessing");
         long elapsedTimePostProcessing = System.nanoTime() - startPostProcessing;
 
         // combined total processing
