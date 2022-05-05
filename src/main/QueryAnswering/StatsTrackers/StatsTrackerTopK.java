@@ -74,6 +74,7 @@ public class StatsTrackerTopK implements StatsTracker {
         long elapsedTimeNanoPreprocessing = System.nanoTime() - startPreprocessing; //System.currentTimeMillis() - startPreprocessing;
 
         // start of Dijkstra
+        System.out.println("abc");
         long start = System.nanoTime(); // System.currentTimeMillis();
 
         answerMap = dijkstraTopK.processDijkstraOverAllInitialNodes();

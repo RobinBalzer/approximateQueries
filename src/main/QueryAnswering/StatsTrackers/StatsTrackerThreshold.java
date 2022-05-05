@@ -58,10 +58,9 @@ public class StatsTrackerThreshold implements StatsTracker {
         System.out.println("---");
 
         System.setOut(stdout);
-
+        
         // start of preprocessing
         long startPreprocessing = System.nanoTime();
-        System.out.println("start of preprocessing...");
         productAutomatonConstructor.construct();
 
         // end of preprocessing
@@ -69,7 +68,6 @@ public class StatsTrackerThreshold implements StatsTracker {
 
         // start of Dijkstra
         long start = System.nanoTime(); // System.currentTimeMillis();
-        System.out.println("start of dijkstra...");
         answerMap = dijkstraThreshold.processDijkstraOverAllInitialNodes();
 
         // end of Dijkstra
@@ -77,7 +75,6 @@ public class StatsTrackerThreshold implements StatsTracker {
 
         // start of postprocessing
         long startPostProcessing = System.nanoTime();
-        System.out.println("start of postprocessing...");
         answerMap = sortResults(answerMap);
 
         // end of postprocessing

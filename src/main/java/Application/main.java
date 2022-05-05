@@ -14,7 +14,7 @@ class main {
      */
     public static void main(String[] args) throws Exception {
 
-        ascii_art();
+        //ascii_art();
 
         String userChoiceComputationMode = args[2];
         String userChoiceTransducerMode = args[1];
